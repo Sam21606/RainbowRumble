@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1054794496188",
+    "project_id": "uunnoo-1f7b3",
+    "storage_bucket": "uunnoo-1f7b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054794496188:android:a73edb7d8061aa21cb78b9",
+        "android_client_info": {
+          "package_name": "com.example.uunnoo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXkCRkm1Osf_4NRmd6sOaO_u-TXMTkR3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
