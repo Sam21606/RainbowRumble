@@ -55,8 +55,9 @@ class GameSettings : AppCompatActivity() {
         Datastore.dealCards()
         playercountChanger()
 
-        val intent = Intent(this, GameSettings::class.java)
-        startActivity(intent)
+        println("Ich wurde ausgeführt")
+        val intent2 = Intent(this, Game::class.java)
+        startActivity(intent2)
     }
 
     fun setOnOfflineStatus(){
@@ -90,7 +91,6 @@ class GameSettings : AppCompatActivity() {
             }
         }
         updateTextOfPlayerCount()
-        println("ICH WURDE ausgeführt der playercount ist ${Datastore.playerCount}")
     }
 
     fun updateTextOfPlayerCount(){
