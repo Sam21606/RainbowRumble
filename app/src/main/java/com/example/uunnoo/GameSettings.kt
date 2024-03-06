@@ -57,12 +57,17 @@ class GameSettings : AppCompatActivity() {
         playercountChanger()
 
         println("Ich wurde ausgeführt")
-        val intent2 = Intent(this, Game::class.java)
-        startActivity(intent2)
+        if (Datastore.onOffline){
+            val intent = Intent(this, OnlineConnection::class.java)
+            startActivity(intent)
+        }else{
+            val intent2 = Intent(this, Game::class.java)
+            startActivity(intent2)
+        }
+
     }
 
     fun setOnOfflineStatus(){
-        playercountChanger()
         if (onOfflinechanger.text.toString() == "Offline"){
             Datastore.onOffline = false
         }else if (onOfflinechanger.text.toString() == "Online"){

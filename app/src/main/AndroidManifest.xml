@@ -29,6 +29,10 @@
             android:name=".Game"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".OnlineConnection"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
