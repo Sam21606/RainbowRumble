@@ -40,11 +40,14 @@ class Game : AppCompatActivity() {
         ziehen = findViewById(R.id.ziehen)
         println("a")
         ziehen.setOnClickListener {
-            drawCard()
+            if (Datastore.isPlayerOnTurn){
+                drawCard()
+            }
+
         }
             //playCard()
         Datastore.addToDB()
-
+        getDBandDBChanges()
     }
 
     private fun drawCard() {
@@ -56,5 +59,53 @@ class Game : AppCompatActivity() {
     private fun playCard() {
         Datastore.cardHolder.add(Datastore.playedCard[0])
         Datastore.playerHands[Datastore.playerTurn]?.remove(Datastore.playedCard[0])
+    }
+
+    fun getDBandDBChanges(){
+        Datastore.db.collection("Games").document(Datastore.gameIdInDB)
+            .addSnapshotListener { snapshot, exception ->if (exception != null) {
+                // Handle Fehler hier
+                println("There was a DB Change3")
+                //return@addSnapshotListener
+            }
+                if (exception == null) {
+                    println("There was a DB Change2")
+                    Datastore.unoCardList = (snapshot?.get("unoCardList") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
+                    println("There was a DB Change21")
+                    Datastore.playedCard = (snapshot?.get("playedCard") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
+                    println("There was a DB Change22")
+                    Datastore.onOffline = snapshot?.getBoolean("onOffline") ?: true
+                    println("There was a DB Change23")
+                    Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
+                    println("There was a DB Change24")
+                    val playerHandsSnapshot: Map<String, List<Map<String, String>>> =
+                        snapshot.get("playerHands") as? Map<String, List<Map<String, String>>> ?: mapOf()
+                    Datastore.playerHands.clear()
+                    playerHandsSnapshot.forEach { (playerKey, cardsList) ->
+                        val playerNumber = playerKey.toInt()
+                        val unoCards = cardsList.map { cardMap ->
+                            Datastore.UnoCard(
+                                number = cardMap["number"] ?: "",
+                                color = cardMap["color"] ?: ""
+                            )
+                        }.toMutableList()
+                        Datastore.playerHands[playerNumber] = unoCards
+                    }
+
+                    if (Datastore.playerNumber == Datastore.playerTurn){
+                        playersTurn()
+                    }
+                }else {
+                    println("There was an DB Change4")
+
+                }
+            }
+
+        println("There was an DB Change")
+    }
+
+
+    fun playersTurn(){
+        Datastore.isPlayerOnTurn = true
     }
 }

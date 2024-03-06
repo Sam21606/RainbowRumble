@@ -1,6 +1,7 @@
 package com.example.uunnoo
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 
 object Datastore {
     data class UnoCard(val number: String, val color: String)
@@ -9,13 +10,16 @@ object Datastore {
     val colors = listOf("Red", "Blue", "Green", "Yellow")
     val numbers = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
     val specialCards = listOf("Draw Two", "Reverse", "Skip")
-    val unoCardList: MutableList<UnoCard> = mutableListOf()
+    var unoCardList: MutableList<UnoCard> = mutableListOf()
     var onOffline = true // true = Online
-    val playerHands: MutableMap<Int, MutableList<UnoCard>> = mutableMapOf()
-    val playedCard: MutableList<UnoCard> = mutableListOf()
+    var playerHands: MutableMap<Int, MutableList<UnoCard>> = mutableMapOf()
+    var playedCard: MutableList<UnoCard> = mutableListOf()
     var cardHolder : MutableList<UnoCard> = mutableListOf()
     var playerTurn = 1
+    var playerNumber = 2
+    var isPlayerOnTurn = false
     val db = FirebaseFirestore.getInstance()
+    var gameIdInDB = "zOeF6qsCEdrD4y79DehX"
 
     fun createCards(){
         for (color in colors) {
@@ -81,10 +85,11 @@ object Datastore {
             "unoCardList" to "$unoCardList",
             "playerHands" to "$playerHands",
             "cardHolder" to "$cardHolder",
-            "playerTurn" to "$playerTurn"
+            "playerTurn" to playerTurn
         )
 
-        db.collection("Games").document("UZp61K8Y8suqcN1qa6TX")
+        db.collection("Games").document("zOeF6qsCEdrD4y79DehX")
             .update(answer)
     }
+
 }
