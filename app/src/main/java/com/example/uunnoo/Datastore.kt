@@ -88,8 +88,25 @@ object Datastore {
             "playerTurn" to playerTurn
         )
 
-        db.collection("Games").document("zOeF6qsCEdrD4y79DehX")
+        db.collection("Games").document("$gameIdInDB")
             .update(answer)
+    }
+
+
+    fun createGame(){
+            db.collection("Games")// Wählt die collection Games als path aus
+                .add(firstplayer) //fügt Varibale firstplayer zu neu erstelltem Dokument hinzu
+                .addOnSuccessListener { documentReference -> //Bei Erfolg
+                    gameIdInDB = documentReference.id //speichert ID des Documents ab
+
+                    firstplayer = hashMapOf( // redefiniert Variable wegen änderung im Wert
+                        "playersconnected" to 0,
+                        "gameIdInDB" to "$gameIdInDB"
+                    )
+                    //fügt Varaible mit korrekter ID zum kreatiren Dokument hinzu
+                    db.collection("Games").document("${Datastore.gameIdInDB}")
+                        .update(firstplayer)
+                }
     }
 
 }

@@ -15,6 +15,7 @@ var buttonJoinClicked = 0
 var buttonCreateClicked = 0
 var firstplayer = hashMapOf(
     "playersconnected" to 1,
+    "playerCount" to Datastore.playerCount,
     "gameIdInDB" to "${Datastore.gameIdInDB}"
 )
 class OnlineConnection : AppCompatActivity() {
@@ -40,43 +41,61 @@ class OnlineConnection : AppCompatActivity() {
     }
 
     private fun joinGame() {
-
+        println("HAAAAAAAALLLLLLLLOOOOOOOOO buttonJoinClicked$buttonJoinClicked buttonCreateClicked$buttonCreateClicked  ${Datastore.gameIdInDB}")
         if (buttonJoinClicked == 0 && buttonCreateClicked == 0){
             inputForID.visibility = View.VISIBLE
             buttonCreate.visibility = View.INVISIBLE
             buttonJoinClicked += 1
             println("$buttonJoinClicked hier haste den wert ganz weird")
 
-        }else if (buttonJoinClicked == 1){
-            println("Hello2")
+        }else if (buttonJoinClicked == 1 && buttonCreateClicked == 0){
             if (inputForID.text?.length  == 20 ){
-                println("Hello")
+                buttonJoinClicked += 1
                 Datastore.gameIdInDB = inputForID.text.toString()
                 db.collection("Games").document(Datastore.gameIdInDB)
                     .addSnapshotListener { snapshot, exception ->
                         if (exception != null) {
                             playersconnected = snapshot?.getLong("playersconnected")?.toInt()!!
-                            println("HAAAALLLOOO $playersconnected")
+                            Datastore.playerCount = snapshot?.getLong("playerCount")?.toInt()!!
+                        }else{
+                            buttonJoinClicked = 1
+                            wrongIdInput()
                         }
-                        println("HAAAALLLOOO $playersconnected")
                     }
+                if (playersconnected +1 == Datastore.playerCount){
+                    val playersConnectedToDB = hashMapOf(
+                        "playersconnected" to playersconnected +1
+                    )
+                    db.collection("Games").document(Datastore.gameIdInDB)
+                        .update(playersConnectedToDB as Map<String, Any>)
+
+                }
 
             }else{
                 TODO("Input Falsch Meldung")
             }
         }else if (buttonJoinClicked == 0 && buttonCreateClicked == 1){
-            TODO("Please copy the code first message")
-        }else if (buttonJoinClicked == 0 && buttonCreateClicked == 2){
+            //copy code first meldung
+        }else if(buttonJoinClicked == 1 && buttonCreateClicked == 2){
+            Datastore.playerNumber = playersconnected + 1
             val intent = Intent(this, Game::class.java)
             startActivity(intent)
+        }else if (buttonJoinClicked == 0 && buttonCreateClicked == 2) {
+            val intent2 = Intent(this, Game::class.java)
+            startActivity(intent2)
+            println("Ich war das Problem")
         }
 
 
 
     }
 
+    private fun wrongIdInput() {
+        TODO("Not yet implemented")
+    }
+
     fun createGame(){
-        if (buttonCreateClicked == 0){
+        if (buttonCreateClicked == 0 && buttonJoinClicked == 0){
             db.collection("Games")
                 .add(firstplayer)
                 .addOnSuccessListener { documentReference ->
@@ -84,6 +103,7 @@ class OnlineConnection : AppCompatActivity() {
 
                     firstplayer = hashMapOf(
                         "playersconnected" to 0,
+                        "playerCount" to Datastore.playerCount,
                         "gameIdInDB" to "${Datastore.gameIdInDB}"
                     )
 
@@ -91,7 +111,7 @@ class OnlineConnection : AppCompatActivity() {
                         .update(firstplayer)
                 }
             buttonnJoin.text = "Start Game"
-            buttonnJoin.text = "Copy Code"
+            buttonCreate.text = "Copy Code"
             buttonCreateClicked += 1
             Datastore.playerNumber = 1
         }else if (buttonCreateClicked == 1){
