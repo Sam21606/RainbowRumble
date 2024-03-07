@@ -19,7 +19,7 @@ object Datastore {
     var playerNumber = 2
     var isPlayerOnTurn = false
     val db = FirebaseFirestore.getInstance()
-    var gameIdInDB = "zOeF6qsCEdrD4y79DehX"
+    var gameIdInDB = "1"
 
     fun createCards(){
         for (color in colors) {
