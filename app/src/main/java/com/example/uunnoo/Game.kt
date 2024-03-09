@@ -2,6 +2,7 @@ package com.example.uunnoo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
@@ -53,12 +54,17 @@ class Game : AppCompatActivity() {
     private fun drawCard() {
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
         Datastore.unoCardList.removeAt(0)
+        Datastore.drawCardToDB()
         println(" BITTTTEEE ${Datastore.playerHands[1]}")
+        turnEnd()
     }
+
+
 
     private fun playCard() {
         Datastore.cardHolder.add(Datastore.playedCard[0])
         Datastore.playerHands[Datastore.playerTurn]?.remove(Datastore.playedCard[0])
+        Datastore.drawCardToDB()
     }
 
     fun getDBandDBChanges(){
@@ -69,15 +75,10 @@ class Game : AppCompatActivity() {
                 //return@addSnapshotListener
             }
                 if (exception == null) {
-                    println("There was a DB Change2")
                     Datastore.unoCardList = (snapshot?.get("unoCardList") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
-                    println("There was a DB Change21")
                     Datastore.playedCard = (snapshot?.get("playedCard") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
-                    println("There was a DB Change22")
                     Datastore.onOffline = snapshot?.getBoolean("onOffline") ?: true
-                    println("There was a DB Change23")
                     Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
-                    println("There was a DB Change24")
                     val playerHandsSnapshot: Map<String, List<Map<String, String>>> =
                         snapshot.get("playerHands") as? Map<String, List<Map<String, String>>> ?: mapOf()
                     Datastore.playerHands.clear()
@@ -95,17 +96,22 @@ class Game : AppCompatActivity() {
                     if (Datastore.playerNumber == Datastore.playerTurn){
                         playersTurn()
                     }
-                }else {
-                    println("There was an DB Change4")
-
                 }
             }
-
-        println("There was an DB Change")
+        if (Datastore.playerTurn == Datastore.playerNumber){
+            allowGameTurn()
+        }
     }
 
+    private fun allowGameTurn() {
+        ziehen.visibility == View.VISIBLE
+    }
 
-    fun playersTurn(){
+    private fun turnEnd() {
+        ziehen.visibility == View.INVISIBLE
+    }
+
+    private fun playersTurn(){
         Datastore.isPlayerOnTurn = true
     }
 }

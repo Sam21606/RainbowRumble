@@ -76,9 +76,9 @@ object Datastore {
 
             }
         }
-
-        println("$playerHands hier sind karten")
-        println("hier sind karten")
+        //Fügt Anfangskarte hinzu
+        cardHolder.add(unoCardList[0])
+        unoCardList.removeAt(0)
     }
     fun addToDB(){
         val answer: MutableMap<String, Any> = hashMapOf(
@@ -92,6 +92,21 @@ object Datastore {
             .update(answer)
     }
 
+    fun drawCardToDB(){
+        if (playerTurn == playerCount){
+            playerTurn = 0
+        }else{
+            playerTurn += 1
+        }
+        val changes: MutableMap<String, Any> = hashMapOf(
+            "cardHolder" to "$cardHolder",
+            "unoCardList" to "$unoCardList",
+            "playerHands" to "$playerHands",
+            "playerTurn" to playerTurn
+        )
+        db.collection("Games").document(gameIdInDB)
+            .update(changes)
+    }
 
     fun createGame(){
             db.collection("Games")// Wählt die collection Games als path aus
@@ -108,5 +123,7 @@ object Datastore {
                         .update(firstplayer)
                 }
     }
+
+
 
 }
