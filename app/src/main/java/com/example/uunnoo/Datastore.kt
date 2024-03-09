@@ -52,7 +52,7 @@ object Datastore {
             unoCardList.add(UnoCard(wildCard, "Black"))
             unoCardList.add(UnoCard(wildCard, "Black"))
         }
-        
+        println("teeeeeest ${unoCardList[0]}")
     }
 
     fun dealCards() {

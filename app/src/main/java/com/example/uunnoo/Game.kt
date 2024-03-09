@@ -46,6 +46,8 @@ class Game : AppCompatActivity() {
             }
 
         }
+        Datastore.playedCard.add(Datastore.unoCardList[0])
+        checkIfCardCanBePlayed()
             //playCard()
         Datastore.addToDB()
         getDBandDBChanges()
@@ -113,5 +115,18 @@ class Game : AppCompatActivity() {
 
     private fun playersTurn(){
         Datastore.isPlayerOnTurn = true
+    }
+
+    fun checkIfCardCanBePlayed(){
+        println("hier sind die Karten ${Datastore.playedCard} ${Datastore.cardHolder}")
+        if ( Datastore.playedCard[0].color == Datastore.cardHolder[0].color){
+            Datastore.cardHolder.add(Datastore.playedCard[0])
+        }else if (Datastore.playedCard[0].number == Datastore.cardHolder[1].number){
+            Datastore.cardHolder.add(Datastore.playedCard[0])
+        }else if(Datastore.playedCard[0].color == "Black"){
+            Datastore.cardHolder.add(Datastore.playedCard[0])
+        }else{
+            // Card not allowed
+        }
     }
 }
