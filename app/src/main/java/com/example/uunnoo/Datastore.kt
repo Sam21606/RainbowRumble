@@ -20,6 +20,9 @@ object Datastore {
     var isPlayerOnTurn = false
     val db = FirebaseFirestore.getInstance()
     var gameIdInDB = "1"
+    var cardViewed = 0
+    private lateinit var unoList:ArrayList<UnoCard>
+
 
     fun createCards(){
         for (color in colors) {
@@ -124,6 +127,245 @@ object Datastore {
                 }
     }
 
+    fun setPlayerHandToViewList(){
+        unoList = ArrayList()
+        for (index in (0 until playerHands[playerNumber]?.size!!)) {
+            when (playerHands[playerNumber]?.get(cardViewed)?.number){
+                "1" -> {
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+                            //unoList.add(UnoCardLink(R.drawable.ic_launcher_background))
+                        }
+                        "Blue"->{
 
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+                }
+                "2" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "3" -> {
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "4" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "5" -> {
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "6" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "7" -> {
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "8" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "9" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "Draw Two" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "Reverse"->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "Skip" ->{
+                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                        "Red"->{
+
+                        }
+                        "Blue"->{
+
+                        }
+                        "Green"->{
+
+                        }
+                        "Yellow"->{
+
+                        }
+                    }
+
+                }
+                "Wild" ->{
+
+                }
+                "Draw Four" ->{
+
+                }
+
+
+            }
+            cardViewed += 1
+        }
+
+    }
+
+
+
+    fun dealCards2() {
+        println("ich wurde ")
+        // Mische die Karten
+        unoCardList.shuffle()
+
+        // Teile jedem Spieler(playercount) 7 zufällige Karten zu
+        for (player in 1..playerCount) {
+            playerHands[player] = mutableListOf()
+            for (i in 1..7) {
+                playerHands[player]?.add(unoCardList[0])
+                //Fügt die Karten den Einzelnen Spielern hinzu
+                unoCardList.removeAt(0)
+                // Entferne die Karte aus dem Deck
+
+            }
+        }
+    }
 
 }

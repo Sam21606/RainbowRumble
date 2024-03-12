@@ -46,6 +46,7 @@ class Game : AppCompatActivity() {
             }
 
         }
+        Datastore.setPlayerHandToViewList()
         Datastore.playedCard.add(Datastore.unoCardList[0])
         checkIfCardCanBePlayed()
             //playCard()
