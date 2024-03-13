@@ -48,7 +48,7 @@ class Game : AppCompatActivity() {
         }
         Datastore.setPlayerHandToViewList()
         Datastore.playedCard.add(Datastore.unoCardList[0])
-        checkIfCardCanBePlayed()
+        //checkIfCardCanBePlayed()
             //playCard()
         Datastore.addToDB()
         getDBandDBChanges()
@@ -56,10 +56,11 @@ class Game : AppCompatActivity() {
 
     private fun drawCard() {
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
+        println(Datastore.unoCardList)
         Datastore.unoCardList.removeAt(0)
-        Datastore.drawCardToDB()
+        //Datastore.drawCardToDB()
         println(" BITTTTEEE ${Datastore.playerHands[1]}")
-        turnEnd()
+        //turnEnd()
     }
 
 

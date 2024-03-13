@@ -21,7 +21,7 @@ object Datastore {
     val db = FirebaseFirestore.getInstance()
     var gameIdInDB = "1"
     var cardViewed = 0
-    private lateinit var unoList:ArrayList<UnoCard>
+    private lateinit var unoList:ArrayList<UnoCardLink>
 
 
     fun createCards(){
@@ -96,6 +96,7 @@ object Datastore {
     }
 
     fun drawCardToDB(){
+        println("$gameIdInDB was ist dein problem")
         if (playerTurn == playerCount){
             playerTurn = 0
         }else{
@@ -129,20 +130,24 @@ object Datastore {
 
     fun setPlayerHandToViewList(){
         unoList = ArrayList()
+
         for (index in (0 until playerHands[playerNumber]?.size!!)) {
             when (playerHands[playerNumber]?.get(cardViewed)?.number){
                 "1" -> {
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
-                            //unoList.add(UnoCardLink(R.drawable.ic_launcher_background))
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -150,15 +155,19 @@ object Datastore {
                 "2" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -167,15 +176,18 @@ object Datastore {
                 "3" -> {
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
-
+                            unoList.add(UnoCardLink(R.drawable.cardblue3))
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -184,15 +196,19 @@ object Datastore {
                 "4" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -201,15 +217,19 @@ object Datastore {
                 "5" -> {
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -218,15 +238,19 @@ object Datastore {
                 "6" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -235,15 +259,19 @@ object Datastore {
                 "7" -> {
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -252,16 +280,19 @@ object Datastore {
                 "8" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
-
+                            unoList.add(UnoCardLink(R.drawable.cardblue3))
                         }
                     }
 
@@ -269,15 +300,19 @@ object Datastore {
                 "9" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -286,15 +321,19 @@ object Datastore {
                 "Draw Two" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -303,15 +342,19 @@ object Datastore {
                 "Reverse"->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
@@ -320,24 +363,30 @@ object Datastore {
                 "Skip" ->{
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Blue"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Green"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                         "Yellow"->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                         }
                     }
 
                 }
                 "Wild" ->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                 }
                 "Draw Four" ->{
+                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd))
 
                 }
 

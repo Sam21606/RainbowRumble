@@ -104,6 +104,8 @@ class OnlineConnection : AppCompatActivity() {
 
     private fun createGame(){
         if (buttonCreateClicked == 0 && buttonJoinClicked == 0){
+            Datastore.createCards()
+            Datastore.dealCards()
             db.collection("Games")
                 .add(firstplayer)
                 .addOnSuccessListener { documentReference ->
@@ -122,6 +124,7 @@ class OnlineConnection : AppCompatActivity() {
             buttonCreate.text = "Copy Code"
             buttonCreateClicked += 1
             Datastore.playerNumber = 1
+            Datastore.addToDB()
         }else if (buttonCreateClicked == 1){
            buttonCreateClicked += 1
             val clipData = ClipData.newPlainText("ID", Datastore.gameIdInDB)

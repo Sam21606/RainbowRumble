@@ -51,9 +51,9 @@ class GameSettings : AppCompatActivity() {
     }
 
     fun startGame(){
-        Datastore.createCards()
-        Datastore.dealCards()
-        Datastore.addToDB()
+        //Datastore.createCards()
+        //Datastore.dealCards()
+        //Datastore.addToDB()
         playercountChanger()
 
         println("Ich wurde ausgeführt")
