@@ -51,15 +51,16 @@ class Game : AppCompatActivity() {
         //checkIfCardCanBePlayed()
             //playCard()
         Datastore.addToDB()
+        println("${Datastore.unoCardList} bitte")
         getDBandDBChanges()
     }
 
     private fun drawCard() {
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
-        println(Datastore.unoCardList)
+        println("${Datastore.unoCardList}haaaaaaaalllloooo")
         Datastore.unoCardList.removeAt(0)
-        //Datastore.drawCardToDB()
-        println(" BITTTTEEE ${Datastore.playerHands[1]}")
+        Datastore.drawCardToDB()
+        //println(" BITTTTEEE ${Datastore.playerHands[1]}")
         //turnEnd()
     }
 
@@ -78,11 +79,59 @@ class Game : AppCompatActivity() {
                 println("There was a DB Change3")
                 //return@addSnapshotListener
             }
-                if (exception == null) {
-                    Datastore.unoCardList = (snapshot?.get("unoCardList") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
-                    Datastore.playedCard = (snapshot?.get("playedCard") as? MutableList<String> ?: mutableListOf()) as MutableList<Datastore.UnoCard>
+                println("Liste ${Datastore.unoCardList}")
+                val unoCardDataString = snapshot?.get("unoCardData") as? String ?: ""
+
+                if (unoCardDataString.isNotBlank()) {
+                    val unoCardDataList = unoCardDataString.split(",")
+                    if (unoCardDataList.size > 0) {
+                        Datastore.unoCardList = unoCardDataList.map { cardString ->
+                            val cardParts = cardString.split(":")
+                            if (cardParts.size == 2) {
+                                val (number, color) = cardParts
+                                Datastore.UnoCard(
+                                    number = number,
+                                    color = color
+                                )
+                            } else {
+                                // Handle incorrect format
+                                null
+                            }
+                        }.filterNotNull().toMutableList()
+                    } else {
+                        // Handle empty list
+                    }
+                } else {
+                    // Handle empty string
+                }
+
+                val playedCardDataString = snapshot?.get("playedCard") as? String ?: ""
+
+                if (unoCardDataString.isNotBlank()) {
+                    val playedCard = playedCardDataString.split(",")
+                    if (playedCard.size > 0) {
+                        Datastore.playedCard = playedCard.map { cardString ->
+                            val cardParts = cardString.split(":")
+                            if (cardParts.size == 2) {
+                                val (number, color) = cardParts
+                                Datastore.UnoCard(
+                                    number = number,
+                                    color = color
+                                )
+                            } else {
+                                // Handle incorrect format
+                                null
+                            }
+                        }.filterNotNull().toMutableList()
+                    } else {
+                        // Handle empty list
+                    }
+                } else {
+                    // Handle empty string
+                }
                     Datastore.onOffline = snapshot?.getBoolean("onOffline") ?: true
                     Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
+
                     val playerHandsSnapshot: Map<String, List<Map<String, String>>> =
                         snapshot.get("playerHands") as? Map<String, List<Map<String, String>>> ?: mapOf()
                     Datastore.playerHands.clear()
@@ -100,11 +149,13 @@ class Game : AppCompatActivity() {
                     if (Datastore.playerNumber == Datastore.playerTurn){
                         playersTurn()
                     }
+                    println("liste danach ${Datastore.unoCardList}")
                 }
-            }
         if (Datastore.playerTurn == Datastore.playerNumber){
             allowGameTurn()
         }
+
+
     }
 
     private fun allowGameTurn() {

@@ -124,11 +124,11 @@ class OnlineConnection : AppCompatActivity() {
             buttonCreate.text = "Copy Code"
             buttonCreateClicked += 1
             Datastore.playerNumber = 1
-            Datastore.addToDB()
-        }else if (buttonCreateClicked == 1){
+        }else if (buttonCreateClicked >= 1){
            buttonCreateClicked += 1
             val clipData = ClipData.newPlainText("ID", Datastore.gameIdInDB)
             clipboardManager.setPrimaryClip(clipData)
+            Datastore.addToDB()
         }
     }
 }
