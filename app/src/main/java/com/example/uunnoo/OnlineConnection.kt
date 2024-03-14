@@ -114,7 +114,8 @@ class OnlineConnection : AppCompatActivity() {
                     firstplayer = hashMapOf(
                         "playersconnected" to 1,
                         "playerCount" to Datastore.playerCount,
-                        "gameIdInDB" to Datastore.gameIdInDB
+                        "gameIdInDB" to Datastore.gameIdInDB,
+                        "playerTurn" to 1
                     )
 
                     db.collection("Games").document(Datastore.gameIdInDB)

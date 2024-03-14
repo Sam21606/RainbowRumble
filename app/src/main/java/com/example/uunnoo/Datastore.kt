@@ -22,6 +22,13 @@ object Datastore {
     var gameIdInDB = "1"
     var cardViewed = 0
     private lateinit var unoList:ArrayList<UnoCardLink>
+    var playerHand1 : MutableList<UnoCard> = mutableListOf()
+    var playerHand2 : MutableList<UnoCard> = mutableListOf()
+    var playerHand3 : MutableList<UnoCard> = mutableListOf()
+    var playerHand4 : MutableList<UnoCard> = mutableListOf()
+    var playerHand5 : MutableList<UnoCard> = mutableListOf()
+    var playerHand6 : MutableList<UnoCard> = mutableListOf()
+    var playerHand7 : MutableList<UnoCard> = mutableListOf()
 
 
     fun createCards(){
@@ -86,9 +93,15 @@ object Datastore {
     fun addToDB(){
         val answer: MutableMap<String, Any> = hashMapOf(
             "unoCardList" to "$unoCardList",
-            "playerHands" to "$playerHands",
             "cardHolder" to "$cardHolder",
-            "playerTurn" to playerTurn
+            "playerTurn" to playerTurn,
+            "playerHand1" to "${playerHands[1]}",
+            "playerHand2" to "${playerHands[2]}",
+            "playerHand3" to "${playerHands[3]}",
+            "playerHand4" to "${playerHands[4]}",
+            "playerHand5" to "${playerHands[5]}",
+            "playerHand6" to "${playerHands[6]}",
+            "playerHand7" to "${playerHands[7]}"
         )
 
         db.collection("Games").document("$gameIdInDB")
@@ -105,8 +118,14 @@ object Datastore {
         val changes: MutableMap<String, Any> = hashMapOf(
             "cardHolder" to "$cardHolder",
             "unoCardList" to "$unoCardList",
-            "playerHands" to "$playerHands",
-            "playerTurn" to playerTurn
+            "playerTurn" to playerTurn,
+            "playerHand1" to "${playerHands[1]}",
+            "playerHand2" to "${playerHands[2]}",
+            "playerHand3" to "${playerHands[3]}",
+            "playerHand4" to "${playerHands[4]}",
+            "playerHand5" to "${playerHands[5]}",
+            "playerHand6" to "${playerHands[6]}",
+            "playerHand7" to "${playerHands[7]}",
         )
         db.collection("Games").document(gameIdInDB)
             .update(changes)
@@ -415,6 +434,18 @@ object Datastore {
 
             }
         }
+    }
+
+    fun mergePlayerhands() {
+        playerHands[1] = playerHand1
+        playerHands[2] = playerHand2
+        playerHands[3] = playerHand3
+        playerHands[4] = playerHand4
+        playerHands[5] = playerHand5
+        playerHands[6] = playerHand6
+        playerHands[7] = playerHand7
+        println("Liste playerhands $playerHands")
+        println("liste playedcard $playedCard")
     }
 
 }

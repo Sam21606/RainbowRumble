@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 lateinit var ziehen: Button
+
 class Game : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +61,7 @@ class Game : AppCompatActivity() {
         println("${Datastore.unoCardList}haaaaaaaalllloooo")
         Datastore.unoCardList.removeAt(0)
         Datastore.drawCardToDB()
-        //println(" BITTTTEEE ${Datastore.playerHands[1]}")
+        println(" BITTTTEEE ${Datastore.playerHands[1]}")
         //turnEnd()
     }
 
@@ -79,12 +80,11 @@ class Game : AppCompatActivity() {
                 println("There was a DB Change3")
                 //return@addSnapshotListener
             }
-                println("Liste ${Datastore.unoCardList}")
                 val unoCardDataString = snapshot?.get("unoCardData") as? String ?: ""
 
                 if (unoCardDataString.isNotBlank()) {
                     val unoCardDataList = unoCardDataString.split(",")
-                    if (unoCardDataList.size > 0) {
+                    if (unoCardDataList.isNotEmpty()) {
                         Datastore.unoCardList = unoCardDataList.map { cardString ->
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
@@ -104,12 +104,12 @@ class Game : AppCompatActivity() {
                 } else {
                     // Handle empty string
                 }
-
+                Datastore.playedCard.clear()
                 val playedCardDataString = snapshot?.get("playedCard") as? String ?: ""
 
-                if (unoCardDataString.isNotBlank()) {
+                if (playedCardDataString.isNotBlank()) {
                     val playedCard = playedCardDataString.split(",")
-                    if (playedCard.size > 0) {
+                    if (playedCard.isNotEmpty()) {
                         Datastore.playedCard = playedCard.map { cardString ->
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
@@ -129,33 +129,154 @@ class Game : AppCompatActivity() {
                 } else {
                     // Handle empty string
                 }
+
                     Datastore.onOffline = snapshot?.getBoolean("onOffline") ?: true
                     Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
 
-                    val playerHandsSnapshot: Map<String, List<Map<String, String>>> =
-                        snapshot.get("playerHands") as? Map<String, List<Map<String, String>>> ?: mapOf()
-                    Datastore.playerHands.clear()
-                    playerHandsSnapshot.forEach { (playerKey, cardsList) ->
-                        val playerNumber = playerKey.toInt()
-                        val unoCards = cardsList.map { cardMap ->
-                            Datastore.UnoCard(
-                                number = cardMap["number"] ?: "",
-                                color = cardMap["color"] ?: ""
-                            )
-                        }.toMutableList()
-                        Datastore.playerHands[playerNumber] = unoCards
-                    }
+                val playerHand1FromDB = snapshot?.get("playerHand1") as? String ?: ""
+                val string1List = listOf("$playerHand1FromDB")
+                if (playerHand1FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand1FromDB")
+                    Datastore.playerHand1 = string1List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand1}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand1}")
 
-                    if (Datastore.playerNumber == Datastore.playerTurn){
+                val playerHand2FromDB = snapshot?.get("playerHand2") as? String ?: ""
+                val string2List = listOf("$playerHand2FromDB")
+                if (playerHand2FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand2FromDB")
+                    Datastore.playerHand2 = string2List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand2}")
+                } else {
+                    println("errrrrorrr2")
+                }
+                println("listtt ${Datastore.playerHand2}")
+
+                val playerHand3FromDB = snapshot?.get("playerHand3") as? String ?: ""
+                val string3List = listOf("$playerHand3FromDB")
+                if (playerHand3FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand3FromDB")
+                    Datastore.playerHand3 = string3List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand3}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand3}")
+
+                val playerHand4FromDB = snapshot?.get("playerHand4") as? String ?: ""
+                val string4List = listOf("$playerHand4FromDB")
+                if (playerHand4FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand4FromDB")
+                    Datastore.playerHand4 = string4List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand4}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand4}")
+
+
+                val playerHand5FromDB = snapshot?.get("playerHand5") as? String ?: ""
+                val string5List = listOf("$playerHand5FromDB")
+                if (playerHand5FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand5FromDB")
+                    Datastore.playerHand5 = string5List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand5}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand5}")
+
+                val playerHand6FromDB = snapshot?.get("playerHand6") as? String ?: ""
+                val string6List = listOf("$playerHand6FromDB")
+                if (playerHand6FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand6FromDB")
+                    Datastore.playerHand6 = string6List.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand6}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand6}")
+
+                val playerHand7FromDB = snapshot?.get("playerHand7") as? String ?: ""
+                val stringList7 = listOf("$playerHand7FromDB")
+                if (playerHand7FromDB.isNotBlank()) {
+                    println("List ahahahahahahahah $playerHand7FromDB")
+                    Datastore.playerHand7 = stringList7.flatMap { input ->
+                        "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
+                            .findAll(input)
+                            .map { matchResult ->
+                                val (number, color) = matchResult.destructured
+                                Datastore.UnoCard(number.trim(), color.trim())
+                            }
+                    }.toMutableList()
+                    println("Listeeee ${Datastore.playerHand7}")
+                } else {
+                    println("errrrrorrr3")
+                }
+                println("listtt ${Datastore.playerHand7}")
+                println("Listtt einzelnes ergebnsi ${Datastore.playerHand7[1]}")
+
+
+
+
+
+                Datastore.playerHands.clear()
+
+                if (Datastore.playerNumber == Datastore.playerTurn){
                         playersTurn()
                     }
-                    println("liste danach ${Datastore.unoCardList}")
+                    println("liste danach ${Datastore.playerHands}")
+                println("liste dadsad ${Datastore.playerHand1}")
                 }
         if (Datastore.playerTurn == Datastore.playerNumber){
             allowGameTurn()
         }
-
-
+        Datastore.mergePlayerhands()
     }
 
     private fun allowGameTurn() {
