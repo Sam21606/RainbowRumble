@@ -1,13 +1,16 @@
 package com.example.uunnoo
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 
 
 lateinit var ziehen: Button
+private lateinit var recyclerView : RecyclerView
+private lateinit var unoList : ArrayList<Datastore.UnoCard>
+var cardToAddToAdapter = 0
 
 class Game : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +43,6 @@ class Game : AppCompatActivity() {
     }
     fun init(){
         ziehen = findViewById(R.id.ziehen)
-        println("a")
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
@@ -52,16 +54,28 @@ class Game : AppCompatActivity() {
         //checkIfCardCanBePlayed()
             //playCard()
         Datastore.addToDB()
-        println("${Datastore.unoCardList} bitte")
         getDBandDBChanges()
     }
 
+    private fun getUnoCardDataForAdapter() {
+        cardToAddToAdapter = 0
+        println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
+        for(i in Datastore.playerHands[Datastore.playerNumber]!!) {
+            println("haaaa bis hier und nicht weiter")
+            //unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
+            println("haaaa bis hier und nicht weiter2")
+            println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
+            cardToAddToAdapter += 1
+        }
+        println("haaaa bis hier und nicht weiter3")
+        //println("${unoList}haaaaaaaalllloooo")
+    }
+
     private fun drawCard() {
+        getUnoCardDataForAdapter()
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
-        println("${Datastore.unoCardList}haaaaaaaalllloooo")
         Datastore.unoCardList.removeAt(0)
         Datastore.drawCardToDB()
-        println(" BITTTTEEE ${Datastore.playerHands[1]}")
         //turnEnd()
     }
 
@@ -85,7 +99,7 @@ class Game : AppCompatActivity() {
                 if (unoCardDataString.isNotBlank()) {
                     val unoCardDataList = unoCardDataString.split(",")
                     if (unoCardDataList.isNotEmpty()) {
-                        Datastore.unoCardList = unoCardDataList.map { cardString ->
+                        Datastore.unoCardList = unoCardDataList.mapNotNull { cardString ->
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
                                 val (number, color) = cardParts
@@ -97,7 +111,7 @@ class Game : AppCompatActivity() {
                                 // Handle incorrect format
                                 null
                             }
-                        }.filterNotNull().toMutableList()
+                        }.toMutableList()
                     } else {
                         // Handle empty list
                     }
@@ -110,7 +124,7 @@ class Game : AppCompatActivity() {
                 if (playedCardDataString.isNotBlank()) {
                     val playedCard = playedCardDataString.split(",")
                     if (playedCard.isNotEmpty()) {
-                        Datastore.playedCard = playedCard.map { cardString ->
+                        Datastore.playedCard = playedCard.mapNotNull { cardString ->
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
                                 val (number, color) = cardParts
@@ -122,7 +136,7 @@ class Game : AppCompatActivity() {
                                 // Handle incorrect format
                                 null
                             }
-                        }.filterNotNull().toMutableList()
+                        }.toMutableList()
                     } else {
                         // Handle empty list
                     }
@@ -133,8 +147,8 @@ class Game : AppCompatActivity() {
                     Datastore.onOffline = snapshot?.getBoolean("onOffline") ?: true
                     Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
 
-                val playerHand1FromDB = snapshot?.get("playerHand1") as? String ?: ""
-                val string1List = listOf("$playerHand1FromDB")
+                val playerHand1FromDB = snapshot.get("playerHand1") as? String ?: ""
+                val string1List = listOf(playerHand1FromDB)
                 if (playerHand1FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand1FromDB")
                     Datastore.playerHand1 = string1List.flatMap { input ->
@@ -151,8 +165,8 @@ class Game : AppCompatActivity() {
                 }
                 println("listtt ${Datastore.playerHand1}")
 
-                val playerHand2FromDB = snapshot?.get("playerHand2") as? String ?: ""
-                val string2List = listOf("$playerHand2FromDB")
+                val playerHand2FromDB = snapshot.get("playerHand2") as? String ?: ""
+                val string2List = listOf(playerHand2FromDB)
                 if (playerHand2FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand2FromDB")
                     Datastore.playerHand2 = string2List.flatMap { input ->
@@ -169,8 +183,8 @@ class Game : AppCompatActivity() {
                 }
                 println("listtt ${Datastore.playerHand2}")
 
-                val playerHand3FromDB = snapshot?.get("playerHand3") as? String ?: ""
-                val string3List = listOf("$playerHand3FromDB")
+                val playerHand3FromDB = snapshot.get("playerHand3") as? String ?: ""
+                val string3List = listOf(playerHand3FromDB)
                 if (playerHand3FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand3FromDB")
                     Datastore.playerHand3 = string3List.flatMap { input ->
@@ -187,8 +201,8 @@ class Game : AppCompatActivity() {
                 }
                 println("listtt ${Datastore.playerHand3}")
 
-                val playerHand4FromDB = snapshot?.get("playerHand4") as? String ?: ""
-                val string4List = listOf("$playerHand4FromDB")
+                val playerHand4FromDB = snapshot.get("playerHand4") as? String ?: ""
+                val string4List = listOf(playerHand4FromDB)
                 if (playerHand4FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand4FromDB")
                     Datastore.playerHand4 = string4List.flatMap { input ->
@@ -206,8 +220,8 @@ class Game : AppCompatActivity() {
                 println("listtt ${Datastore.playerHand4}")
 
 
-                val playerHand5FromDB = snapshot?.get("playerHand5") as? String ?: ""
-                val string5List = listOf("$playerHand5FromDB")
+                val playerHand5FromDB = snapshot.get("playerHand5") as? String ?: ""
+                val string5List = listOf(playerHand5FromDB)
                 if (playerHand5FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand5FromDB")
                     Datastore.playerHand5 = string5List.flatMap { input ->
@@ -224,8 +238,8 @@ class Game : AppCompatActivity() {
                 }
                 println("listtt ${Datastore.playerHand5}")
 
-                val playerHand6FromDB = snapshot?.get("playerHand6") as? String ?: ""
-                val string6List = listOf("$playerHand6FromDB")
+                val playerHand6FromDB = snapshot.get("playerHand6") as? String ?: ""
+                val string6List = listOf(playerHand6FromDB)
                 if (playerHand6FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand6FromDB")
                     Datastore.playerHand6 = string6List.flatMap { input ->
@@ -242,8 +256,8 @@ class Game : AppCompatActivity() {
                 }
                 println("listtt ${Datastore.playerHand6}")
 
-                val playerHand7FromDB = snapshot?.get("playerHand7") as? String ?: ""
-                val stringList7 = listOf("$playerHand7FromDB")
+                val playerHand7FromDB = snapshot.get("playerHand7") as? String ?: ""
+                val stringList7 = listOf(playerHand7FromDB)
                 if (playerHand7FromDB.isNotBlank()) {
                     println("List ahahahahahahahah $playerHand7FromDB")
                     Datastore.playerHand7 = stringList7.flatMap { input ->
@@ -255,17 +269,12 @@ class Game : AppCompatActivity() {
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand7}")
+                    Datastore.mergePlayerhands()
+                    println("listtt ${Datastore.playerHand7}")
                 } else {
                     println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand7}")
-                println("Listtt einzelnes ergebnsi ${Datastore.playerHand7[1]}")
-
-
-
-
-
-                Datastore.playerHands.clear()
+                println("Listtt einzelnes ergebnsi ${Datastore.playerHand7[0]}")
 
                 if (Datastore.playerNumber == Datastore.playerTurn){
                         playersTurn()
@@ -276,7 +285,7 @@ class Game : AppCompatActivity() {
         if (Datastore.playerTurn == Datastore.playerNumber){
             allowGameTurn()
         }
-        Datastore.mergePlayerhands()
+
     }
 
     private fun allowGameTurn() {

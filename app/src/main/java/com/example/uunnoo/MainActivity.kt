@@ -1,12 +1,12 @@
 package com.example.uunnoo
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.RatingBar
+import androidx.appcompat.app.AppCompatActivity
 
-lateinit var startButton: Button
+private lateinit var startButton: Button
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
