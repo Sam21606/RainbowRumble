@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uunnoo.Datastore.UnoCard
 
 
-lateinit var ziehen: Button
+private lateinit var ziehen: Button
 private lateinit var recyclerView : RecyclerView
-private lateinit var unoList : MutableList<UnoCard>
+private var unoList : MutableList<UnoCard> = mutableListOf()
 var cardToAddToAdapter = 0
 
 class Game : AppCompatActivity() {
@@ -44,13 +45,15 @@ class Game : AppCompatActivity() {
     }
     fun init(){
         ziehen = findViewById(R.id.ziehen)
+        recyclerView = findViewById(R.id.RecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.setHasFixedSize(true)
+
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
             }
-
         }
-        Datastore.setPlayerHandToViewList()
         Datastore.playedCard.add(Datastore.unoCardList[0])
         //checkIfCardCanBePlayed()
             //playCard()
@@ -60,23 +63,20 @@ class Game : AppCompatActivity() {
 
     private fun getUnoCardDataForAdapter() {
         cardToAddToAdapter = 0
+        unoList.clear()
         println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
         for(i in Datastore.playerHands[Datastore.playerNumber]!!) {
-            println("haaaa bis hier und nicht weiter")
             unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
-            //unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
-            println("haaaa bis hier und nicht weiter2")
-            println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
             cardToAddToAdapter += 1
         }
-        println("haaaa bis hier und nicht weiter3")
-        //println("${unoList}haaaaaaaalllloooo")
+        Datastore.setPlayerHandToViewList()
+        recyclerView.adapter = UnoCardAdapter(Datastore.unoList)
     }
 
     private fun drawCard() {
-        getUnoCardDataForAdapter()
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
         Datastore.unoCardList.removeAt(0)
+        getUnoCardDataForAdapter()
         Datastore.drawCardToDB()
         //turnEnd()
     }
@@ -92,9 +92,7 @@ class Game : AppCompatActivity() {
     fun getDBandDBChanges(){
         Datastore.db.collection("Games").document(Datastore.gameIdInDB)
             .addSnapshotListener { snapshot, exception ->if (exception != null) {
-                // Handle Fehler hier
                 println("There was a DB Change3")
-                //return@addSnapshotListener
             }
                 val unoCardDataString = snapshot?.get("unoCardData") as? String ?: ""
 

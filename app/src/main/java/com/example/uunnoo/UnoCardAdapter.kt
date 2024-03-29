@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-class UnoCardAdapter(private val unoList: List<UnoCardLink>) :
+class UnoCardAdapter(private val unoList: MutableList<UnoCardLink>) :
     RecyclerView.Adapter<UnoCardAdapter.CardViewHolder>() {
     class CardViewHolder (itemView: View) :RecyclerView.ViewHolder(itemView){
         val cardId : ImageView = itemView.findViewById(R.id.idOfCard)
@@ -26,7 +26,7 @@ class UnoCardAdapter(private val unoList: List<UnoCardLink>) :
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val cards = unoList[position]
-        holder.cardId.setImageResource(cards.number)
+        holder.cardId.setImageResource(cards.link)
     }
 
 }

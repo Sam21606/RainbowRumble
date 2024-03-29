@@ -1,7 +1,6 @@
 package com.example.uunnoo
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 
 object Datastore {
     data class UnoCard(val number: String, val color: String)
@@ -21,7 +20,7 @@ object Datastore {
     val db = FirebaseFirestore.getInstance()
     var gameIdInDB = "1"
     var cardViewed = 0
-    private lateinit var unoList:ArrayList<UnoCardLink>
+    lateinit var unoList:MutableList<UnoCardLink>
     var playerHand1 : MutableList<UnoCard> = mutableListOf()
     var playerHand2 : MutableList<UnoCard> = mutableListOf()
     var playerHand3 : MutableList<UnoCard> = mutableListOf()
@@ -148,8 +147,9 @@ object Datastore {
     }
 
     fun setPlayerHandToViewList(){
-        unoList = ArrayList()
-
+        unoList = mutableListOf()
+        cardViewed = 0
+        unoList.clear()
         for (index in (0 until playerHands[playerNumber]?.size!!)) {
             when (playerHands[playerNumber]?.get(cardViewed)?.number){
                 "1" -> {
@@ -412,6 +412,7 @@ object Datastore {
 
             }
             cardViewed += 1
+            println("biiiite $unoList")
         }
 
     }
