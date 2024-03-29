@@ -28,6 +28,7 @@ object Datastore {
     var playerHand5 : MutableList<UnoCard> = mutableListOf()
     var playerHand6 : MutableList<UnoCard> = mutableListOf()
     var playerHand7 : MutableList<UnoCard> = mutableListOf()
+    lateinit var listOfCardsToGiveLink : MutableList<UnoCard>
 
 
     fun createCards(){
@@ -108,12 +109,6 @@ object Datastore {
     }
 
     fun drawCardToDB(){
-        println("$gameIdInDB was ist dein problem")
-        if (playerTurn == playerCount){
-            playerTurn = 0
-        }else{
-            playerTurn += 1
-        }
         val changes: MutableMap<String, Any> = hashMapOf(
             "cardHolder" to "$cardHolder",
             "unoCardList" to "$unoCardList",
@@ -141,7 +136,7 @@ object Datastore {
                         "gameIdInDB" to "$gameIdInDB"
                     )
                     //fügt Varaible mit korrekter ID zum kreatiren Dokument hinzu
-                    db.collection("Games").document("${Datastore.gameIdInDB}")
+                    db.collection("Games").document("$gameIdInDB")
                         .update(firstplayer)
                 }
     }
@@ -150,8 +145,8 @@ object Datastore {
         unoList = mutableListOf()
         cardViewed = 0
         unoList.clear()
-        for (index in (0 until playerHands[playerNumber]?.size!!)) {
-            when (playerHands[playerNumber]?.get(cardViewed)?.number){
+        for (index in (0 until listOfCardsToGiveLink.size)) {
+            when (listOfCardsToGiveLink[cardViewed].number){
                 "1" -> {
                     when (playerHands[playerNumber]?.get(cardViewed)?.color){
                         "Red"->{
@@ -448,5 +443,9 @@ object Datastore {
         println("Liste playerhands $playerHands")
         println("liste playedcard $playedCard")
     }
+
+
+
+
 
 }

@@ -3,6 +3,8 @@ package com.example.uunnoo
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +12,14 @@ import com.example.uunnoo.Datastore.UnoCard
 
 
 private lateinit var ziehen: Button
+private lateinit var PlayerCardCount2 : TextView
+private lateinit var PlayerCardCount3 : TextView
+private lateinit var PlayerCardCount4 : TextView
+private lateinit var PlayerCardCount4_5 : TextView
+private lateinit var PlayerCardCount5 : TextView
+private lateinit var PlayerCardCount6 : TextView
+private lateinit var PlayerCardCount7 : TextView
+private lateinit var cardHolder : ImageView
 private lateinit var recyclerView : RecyclerView
 private var unoList : MutableList<UnoCard> = mutableListOf()
 var cardToAddToAdapter = 0
@@ -46,9 +56,17 @@ class Game : AppCompatActivity() {
     fun init(){
         ziehen = findViewById(R.id.ziehen)
         recyclerView = findViewById(R.id.RecyclerView)
+        PlayerCardCount2 = findViewById(R.id.PlayerCardCount2)
+        PlayerCardCount3 = findViewById(R.id.PlayerCardCount3)
+        PlayerCardCount4 = findViewById(R.id.PlayerCardCount4)
+        PlayerCardCount4_5 = findViewById(R.id.PlayerCardCount4_5)
+        PlayerCardCount5 = findViewById(R.id.PlayerCardCount5)
+        PlayerCardCount6 = findViewById(R.id.PlayerCardCount6)
+        PlayerCardCount7 = findViewById(R.id.PlayerCardCount7)
+        cardHolder = findViewById(R.id.cardHolder)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
-
+        changeDisplayedItems()
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
@@ -62,9 +80,10 @@ class Game : AppCompatActivity() {
     }
 
     private fun getUnoCardDataForAdapter() {
+        // setzt die zu verlinkenden karten für die unoliste
+        Datastore.listOfCardsToGiveLink = Datastore.playerHands[Datastore.playerNumber]!!
         cardToAddToAdapter = 0
         unoList.clear()
-        println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
         for(i in Datastore.playerHands[Datastore.playerNumber]!!) {
             unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
             cardToAddToAdapter += 1
@@ -76,7 +95,7 @@ class Game : AppCompatActivity() {
     private fun drawCard() {
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
         Datastore.unoCardList.removeAt(0)
-        getUnoCardDataForAdapter()
+        changeDisplayedItems()
         Datastore.drawCardToDB()
         //turnEnd()
     }
@@ -92,7 +111,6 @@ class Game : AppCompatActivity() {
     fun getDBandDBChanges(){
         Datastore.db.collection("Games").document(Datastore.gameIdInDB)
             .addSnapshotListener { snapshot, exception ->if (exception != null) {
-                println("There was a DB Change3")
             }
                 val unoCardDataString = snapshot?.get("unoCardData") as? String ?: ""
 
@@ -150,7 +168,6 @@ class Game : AppCompatActivity() {
                 val playerHand1FromDB = snapshot.get("playerHand1") as? String ?: ""
                 val string1List = listOf(playerHand1FromDB)
                 if (playerHand1FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand1FromDB")
                     Datastore.playerHand1 = string1List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -159,16 +176,12 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand1}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand1}")
 
                 val playerHand2FromDB = snapshot.get("playerHand2") as? String ?: ""
                 val string2List = listOf(playerHand2FromDB)
                 if (playerHand2FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand2FromDB")
                     Datastore.playerHand2 = string2List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -177,16 +190,12 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand2}")
                 } else {
-                    println("errrrrorrr2")
                 }
-                println("listtt ${Datastore.playerHand2}")
 
                 val playerHand3FromDB = snapshot.get("playerHand3") as? String ?: ""
                 val string3List = listOf(playerHand3FromDB)
                 if (playerHand3FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand3FromDB")
                     Datastore.playerHand3 = string3List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -195,16 +204,12 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand3}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand3}")
 
                 val playerHand4FromDB = snapshot.get("playerHand4") as? String ?: ""
                 val string4List = listOf(playerHand4FromDB)
                 if (playerHand4FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand4FromDB")
                     Datastore.playerHand4 = string4List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -213,17 +218,13 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand4}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand4}")
 
 
                 val playerHand5FromDB = snapshot.get("playerHand5") as? String ?: ""
                 val string5List = listOf(playerHand5FromDB)
                 if (playerHand5FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand5FromDB")
                     Datastore.playerHand5 = string5List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -232,11 +233,8 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand5}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand5}")
 
                 val playerHand6FromDB = snapshot.get("playerHand6") as? String ?: ""
                 val string6List = listOf(playerHand6FromDB)
@@ -250,11 +248,8 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand6}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("listtt ${Datastore.playerHand6}")
 
                 val playerHand7FromDB = snapshot.get("playerHand7") as? String ?: ""
                 val stringList7 = listOf(playerHand7FromDB)
@@ -268,24 +263,253 @@ class Game : AppCompatActivity() {
                                 UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
-                    println("Listeeee ${Datastore.playerHand7}")
                     Datastore.mergePlayerhands()
-                    println("listtt ${Datastore.playerHand7}")
                 } else {
-                    println("errrrrorrr3")
                 }
-                println("Listtt einzelnes ergebnsi ${Datastore.playerHand7[0]}")
 
                 if (Datastore.playerNumber == Datastore.playerTurn){
                         playersTurn()
                     }
-                    println("liste danach ${Datastore.playerHands}")
-                println("liste dadsad ${Datastore.playerHand1}")
+
+
+
+                changeDisplayedItems()
                 }
         if (Datastore.playerTurn == Datastore.playerNumber){
             allowGameTurn()
         }
 
+    }
+
+    private fun changeDisplayedItems() {
+        getUnoCardDataForAdapter()
+        getLinkForCardHolder()
+        changeShownText()
+    }
+
+    private fun changeShownText() {
+        when(Datastore.playerNumber){
+            1 ->{
+                when (Datastore.playerCount){
+                    2 -> {
+                        PlayerCardCount4_5.text = Datastore.playerHands[2]?.size.toString()
+
+                    }
+                    3 -> {
+                        PlayerCardCount4.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[3]?.size.toString()
+                    }
+                    4 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+
+                    }
+                    5 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+
+                    }
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[6]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+            }
+            2->{
+                when (Datastore.playerCount){
+                    2 -> {
+                        PlayerCardCount4_5.text = Datastore.playerHands[1]?.size.toString()
+
+                    }
+                    3 -> {
+                        PlayerCardCount4.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[3]?.size.toString()
+                    }
+                    4 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+
+                    }
+                    5 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+
+                    }
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[6]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+            }
+            3->{
+                when (Datastore.playerCount){
+                    3 -> {
+                        PlayerCardCount4.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[2]?.size.toString()
+                    }
+                    4 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+
+                    }
+                    5 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+
+                    }
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[6]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+
+            }
+            4-> {
+                when (Datastore.playerCount){
+                    4 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[3]?.size.toString()
+
+                    }
+                    5 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+
+                    }
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[6]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+            }
+            5->{
+                when (Datastore.playerCount){
+                    5 -> {
+                        PlayerCardCount3.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+
+                    }
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[6]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+            }
+            6->{
+                when (Datastore.playerCount){
+                    6 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4_5.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[5]?.size.toString()
+
+                    }
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[7]?.size.toString()
+                    }
+                }
+            }
+            7->{
+                when (Datastore.playerCount){
+                    7 -> {
+                        PlayerCardCount2.text = Datastore.playerHands[1]?.size.toString()
+                        PlayerCardCount3.text = Datastore.playerHands[2]?.size.toString()
+                        PlayerCardCount4.text = Datastore.playerHands[3]?.size.toString()
+                        PlayerCardCount5.text = Datastore.playerHands[4]?.size.toString()
+                        PlayerCardCount6.text = Datastore.playerHands[5]?.size.toString()
+                        PlayerCardCount7.text = Datastore.playerHands[6]?.size.toString()
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    private fun getLinkForCardHolder(){
+        Datastore.listOfCardsToGiveLink = Datastore.cardHolder
+        Datastore.setPlayerHandToViewList()
+        cardHolder.setImageResource(Datastore.unoList[0].link)
     }
 
     private fun allowGameTurn() {
@@ -294,6 +518,11 @@ class Game : AppCompatActivity() {
 
     private fun turnEnd() {
         ziehen.visibility == View.INVISIBLE
+        if (Datastore.playerTurn == Datastore.playerCount){
+            Datastore.playerTurn = 0
+        }else{
+            Datastore.playerTurn += 1
+        }
     }
 
     private fun playersTurn(){
