@@ -5,11 +5,12 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uunnoo.Datastore.UnoCard
 
 
 lateinit var ziehen: Button
 private lateinit var recyclerView : RecyclerView
-private lateinit var unoList : ArrayList<Datastore.UnoCard>
+private lateinit var unoList : MutableList<UnoCard>
 var cardToAddToAdapter = 0
 
 class Game : AppCompatActivity() {
@@ -62,6 +63,7 @@ class Game : AppCompatActivity() {
         println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
         for(i in Datastore.playerHands[Datastore.playerNumber]!!) {
             println("haaaa bis hier und nicht weiter")
+            unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
             //unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
             println("haaaa bis hier und nicht weiter2")
             println("haaaaaaa ${Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!}")
@@ -103,7 +105,7 @@ class Game : AppCompatActivity() {
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
                                 val (number, color) = cardParts
-                                Datastore.UnoCard(
+                                UnoCard(
                                     number = number,
                                     color = color
                                 )
@@ -128,7 +130,7 @@ class Game : AppCompatActivity() {
                             val cardParts = cardString.split(":")
                             if (cardParts.size == 2) {
                                 val (number, color) = cardParts
-                                Datastore.UnoCard(
+                                UnoCard(
                                     number = number,
                                     color = color
                                 )
@@ -156,7 +158,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand1}")
@@ -174,7 +176,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand2}")
@@ -192,7 +194,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand3}")
@@ -210,7 +212,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand4}")
@@ -229,7 +231,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand5}")
@@ -247,7 +249,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand6}")
@@ -265,7 +267,7 @@ class Game : AppCompatActivity() {
                             .findAll(input)
                             .map { matchResult ->
                                 val (number, color) = matchResult.destructured
-                                Datastore.UnoCard(number.trim(), color.trim())
+                                UnoCard(number.trim(), color.trim())
                             }
                     }.toMutableList()
                     println("Listeeee ${Datastore.playerHand7}")
