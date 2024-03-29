@@ -20,40 +20,21 @@ private lateinit var PlayerCardCount5 : TextView
 private lateinit var PlayerCardCount6 : TextView
 private lateinit var PlayerCardCount7 : TextView
 private lateinit var cardHolder : ImageView
+private lateinit var unoCardAdapter: UnoCardAdapter
 private lateinit var recyclerView : RecyclerView
 private var unoList : MutableList<UnoCard> = mutableListOf()
+private var cardList : MutableList<UnoCardLink> = mutableListOf()
 var cardToAddToAdapter = 0
 
 class Game : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_2player)
-        when (Datastore.playerCount){
-            2 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-            3 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-            4 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-            5 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-            6 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-            7 -> {
-                setContentView(R.layout.activity_game_2player)
-            }
-        }
-
-
 
         init()
     }
     fun init(){
+        unoCardAdapter = UnoCardAdapter(cardList)
         ziehen = findViewById(R.id.ziehen)
         recyclerView = findViewById(R.id.RecyclerView)
         PlayerCardCount2 = findViewById(R.id.PlayerCardCount2)
@@ -66,12 +47,22 @@ class Game : AppCompatActivity() {
         cardHolder = findViewById(R.id.cardHolder)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
+
+
+        unoCardAdapter.onButtonClick ={cards ->
+            Datastore.playedCard.clear()
+            Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]?.get(cards.positionInPlayerHand)!!)
+            println("BITTE FUNKTIONIERE ${Datastore.playedCard}")
+            println("teeest")
+        }
+
         changeDisplayedItems()
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
             }
         }
+
         Datastore.playedCard.add(Datastore.unoCardList[0])
         //checkIfCardCanBePlayed()
             //playCard()

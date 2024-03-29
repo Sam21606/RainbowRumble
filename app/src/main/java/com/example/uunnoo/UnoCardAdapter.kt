@@ -3,13 +3,18 @@ package com.example.uunnoo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-class UnoCardAdapter(private val unoList: MutableList<UnoCardLink>) :
+class UnoCardAdapter(private val cardList: MutableList<UnoCardLink>) :
     RecyclerView.Adapter<UnoCardAdapter.CardViewHolder>() {
+
+        var onButtonClick : ((UnoCardLink) -> Unit)? = null
+
     class CardViewHolder (itemView: View) :RecyclerView.ViewHolder(itemView){
         val cardId : ImageView = itemView.findViewById(R.id.idOfCard)
+        val playCardButton : Button = itemView.findViewById(R.id.playCardButton)
     }
 
     override fun onCreateViewHolder(
@@ -21,12 +26,15 @@ class UnoCardAdapter(private val unoList: MutableList<UnoCardLink>) :
     }
 
     override fun getItemCount(): Int {
-        return unoList.size
+        return cardList.size
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        val cards = unoList[position]
+        val cards = cardList[position]
         holder.cardId.setImageResource(cards.link)
+        holder.playCardButton.setOnClickListener{
+            onButtonClick?.invoke(cards)
+        }
     }
 
 }
