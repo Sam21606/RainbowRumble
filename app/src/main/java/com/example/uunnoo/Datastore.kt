@@ -32,6 +32,9 @@ object Datastore {
     lateinit var listOfCardsToGiveLink : MutableList<UnoCard>
     var cardsOnAdaperGotClicked = false
     var playedCardPositionInPlayerHand = 0
+    var cardCanBePlayed = false
+    var anyCardCanBePlayed = true
+    var rotationDirection = true
 
 
     fun createCards(){
@@ -431,31 +434,29 @@ object Datastore {
 
     fun checkIfCardCanBePlayed() {
         //Prüft ob Karte gelegt werden darf indem geprüft wird ob nummer oder Farbe gleich ist oder ob es eine Spezail karte ist
+        anyCardCanBePlayed = true
         if (cardHolder[0].number == "Draw Two" ||cardHolder[0].number == "Draw Four" ) {
             checkIfPlayerCanCounterCardDraw()
-        }else if( cardHolder[0].number == "Draw Two"){
-            if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four"){
-                playCard()
-            } else{
-                TODO("Card Denied")
-            }
-        }else if (cardHolder[0].number == "Draw Four"){
-            if (playedCard[0].number == "Draw Four"){
-                playCard()
-            }else{
-                TODO("Card Denied")
-            }
-        }else if (cardHolder[0].color == "Black"){
-            handleSpecialActions()
-        }else {
-            if (playedCard[0].color == cardHolder[0].color) {
-                playCard()
-            } else if (playedCard[0].number == cardHolder[1].number) {
-                playCard()
-            } else if (playedCard[0].color == "Black") {
-                playCard()
+        }
+        if (anyCardCanBePlayed) {
+            if (cardHolder[0].number == "Draw Two") {//check if last Card was Plus 2
+                if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
+                    playCard()
+                }
+            } else if (cardHolder[0].number == "Draw Four") {//check if last Card was Plus 4
+                if (playedCard[0].number == "Draw Four") {
+                    playCard()
+                }
+            } else if (cardHolder[0].color == "Black") {//check if last Card was special Card
+                handleSpecialActions()
             } else {
-                // Card not allowed
+                if (playedCard[0].color == cardHolder[0].color) {// check if color matches
+                    playCard()
+                } else if (playedCard[0].number == cardHolder[0].number) {//check if number matches
+                    playCard()
+                } else if (playedCard[0].color == "Black") {//check if card is specialcard
+                    playCard()
+                }
             }
         }
     }
@@ -465,6 +466,8 @@ object Datastore {
         for (index in (0 until playerHands[playerNumber]!!.size)){
             if (playerHands[playerNumber]!![cardToCheck].number == "Draw Two" || playerHands[playerNumber]!![cardToCheck].number == "Draw Four" ){
                 handleSpecialActions()
+            }else if (playerHands[playerNumber]?.size   == cardToCheck){
+                anyCardCanBePlayed = false
             }
         }
     }
@@ -496,6 +499,23 @@ object Datastore {
     private fun playCard() {
         cardHolder.add(playedCard[0])
         playerHands[playerNumber]!!.removeAt(playedCardPositionInPlayerHand)
+    }
+
+    fun nextTurn(){
+        if (rotationDirection){
+            if (playerTurn < playerNumber){
+                playerTurn += 1
+            }else{
+                playerTurn = 0
+            }
+        }else{
+            if (playerTurn > 0){
+                playerTurn -= 1
+            }else {
+                playerTurn = playerCount
+            }
+
+        }
     }
 
 
