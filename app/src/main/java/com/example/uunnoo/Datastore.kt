@@ -57,7 +57,7 @@ object Datastore {
         }
 
         // Farbenwahlkarten und Zieh Vier Farbenwahlkarten
-        val wildCards = listOf("Wild", "Draw Four")
+        val wildCards = listOf("Color change", "Draw Four")
 
         for (wildCard in wildCards) {
             unoCardList.add(UnoCard(wildCard, "Black"))
@@ -445,6 +445,8 @@ object Datastore {
             }else{
                 TODO("Card Denied")
             }
+        }else if (cardHolder[0].color == "Black"){
+            handleSpecialActions()
         }else {
             if (playedCard[0].color == cardHolder[0].color) {
                 playCard()
@@ -462,20 +464,27 @@ object Datastore {
         var cardToCheck = 0
         for (index in (0 until playerHands[playerNumber]!!.size)){
             if (playerHands[playerNumber]!![cardToCheck].number == "Draw Two" || playerHands[playerNumber]!![cardToCheck].number == "Draw Four" ){
-                drawCardsForPlayer()
+                handleSpecialActions()
             }
         }
     }
 
-    private fun drawCardsForPlayer() {
+    private fun handleSpecialActions() {
         if (playedCard[0].number == "Draw Two"){
             for (i in 1 .. 2){
                 drawCard()
             }
-        }else{
+        }else if (playedCard[0].number == "Draw Four"){
             for (i in 1 .. 4){
                 drawCard()
             }
+        }else if (playedCard[0].number == "Color change"){
+            TODO("add Color choosing mechanism")
+        }else if (playedCard[0].number == "Skip"){
+            playCard()
+            playerTurn += 1
+        }else if (playedCard[0].number == "Reverse"){
+            TODO("Change game")
         }
     }
 

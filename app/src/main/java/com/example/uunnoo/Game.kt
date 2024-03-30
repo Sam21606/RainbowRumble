@@ -48,6 +48,9 @@ class Game : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         changeDisplayedItems()
 
+        Datastore.cardHolder.add(Datastore.unoCardList[0])
+        Datastore.unoCardList.removeAt(0)
+
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
@@ -64,6 +67,8 @@ class Game : AppCompatActivity() {
             changeDisplayedItems()
             Datastore.cardsOnAdaperGotClicked = false
         }
+
+        println("whuut ${Datastore.cardHolder}")
     }
 
     private fun getUnoCardDataForAdapter() {
@@ -489,7 +494,7 @@ class Game : AppCompatActivity() {
     private fun getLinkForCardHolder(){
         Datastore.listOfCardsToGiveLink = Datastore.cardHolder
         Datastore.setPlayerHandToViewList()
-        cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size].link)
+        //cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size].link)
     }
 
     private fun allowGameTurn() {
