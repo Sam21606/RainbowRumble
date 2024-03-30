@@ -23,7 +23,6 @@ private lateinit var cardHolder : ImageView
 private lateinit var unoCardAdapter: UnoCardAdapter
 private lateinit var recyclerView : RecyclerView
 private var unoList : MutableList<UnoCard> = mutableListOf()
-private var cardList : MutableList<UnoCardLink> = mutableListOf()
 var cardToAddToAdapter = 0
 
 class Game : AppCompatActivity() {
@@ -34,7 +33,7 @@ class Game : AppCompatActivity() {
         init()
     }
     fun init(){
-        unoCardAdapter = UnoCardAdapter(cardList)
+        unoCardAdapter = UnoCardAdapter(Datastore.cardList)
         ziehen = findViewById(R.id.ziehen)
         recyclerView = findViewById(R.id.RecyclerView)
         PlayerCardCount2 = findViewById(R.id.PlayerCardCount2)
@@ -47,16 +46,8 @@ class Game : AppCompatActivity() {
         cardHolder = findViewById(R.id.cardHolder)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
-
-
-        unoCardAdapter.onButtonClick ={cards ->
-            Datastore.playedCard.clear()
-            Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]?.get(cards.positionInPlayerHand)!!)
-            println("BITTE FUNKTIONIERE ${Datastore.playedCard}")
-            println("teeest")
-        }
-
         changeDisplayedItems()
+
         ziehen.setOnClickListener {
             if (Datastore.isPlayerOnTurn){
                 drawCard()
@@ -64,10 +55,15 @@ class Game : AppCompatActivity() {
         }
 
         Datastore.playedCard.add(Datastore.unoCardList[0])
+        Datastore.unoCardList.removeAt(0)
         //checkIfCardCanBePlayed()
             //playCard()
         Datastore.addToDB()
         getDBandDBChanges()
+        while (Datastore.cardsOnAdaperGotClicked){
+            changeDisplayedItems()
+            Datastore.cardsOnAdaperGotClicked = false
+        }
     }
 
     private fun getUnoCardDataForAdapter() {
@@ -80,24 +76,17 @@ class Game : AppCompatActivity() {
             cardToAddToAdapter += 1
         }
         Datastore.setPlayerHandToViewList()
-        recyclerView.adapter = UnoCardAdapter(Datastore.unoList)
+        recyclerView.adapter = UnoCardAdapter(Datastore.cardList)
     }
 
     private fun drawCard() {
         Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
         Datastore.unoCardList.removeAt(0)
         changeDisplayedItems()
-        Datastore.drawCardToDB()
+        Datastore.addToDB()
         //turnEnd()
     }
 
-
-
-    private fun playCard() {
-        Datastore.cardHolder.add(Datastore.playedCard[0])
-        Datastore.playerHands[Datastore.playerTurn]?.remove(Datastore.playedCard[0])
-        Datastore.drawCardToDB()
-    }
 
     fun getDBandDBChanges(){
         Datastore.db.collection("Games").document(Datastore.gameIdInDB)
@@ -273,8 +262,8 @@ class Game : AppCompatActivity() {
     }
 
     private fun changeDisplayedItems() {
-        getUnoCardDataForAdapter()
         getLinkForCardHolder()
+        getUnoCardDataForAdapter()
         changeShownText()
     }
 
@@ -500,7 +489,7 @@ class Game : AppCompatActivity() {
     private fun getLinkForCardHolder(){
         Datastore.listOfCardsToGiveLink = Datastore.cardHolder
         Datastore.setPlayerHandToViewList()
-        cardHolder.setImageResource(Datastore.unoList[0].link)
+        cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size].link)
     }
 
     private fun allowGameTurn() {
@@ -520,16 +509,4 @@ class Game : AppCompatActivity() {
         Datastore.isPlayerOnTurn = true
     }
 
-    fun checkIfCardCanBePlayed(){
-        println("hier sind die Karten ${Datastore.playedCard} ${Datastore.cardHolder}")
-        if ( Datastore.playedCard[0].color == Datastore.cardHolder[0].color){
-            Datastore.cardHolder.add(Datastore.playedCard[0])
-        }else if (Datastore.playedCard[0].number == Datastore.cardHolder[1].number){
-            Datastore.cardHolder.add(Datastore.playedCard[0])
-        }else if(Datastore.playedCard[0].color == "Black"){
-            Datastore.cardHolder.add(Datastore.playedCard[0])
-        }else{
-            // Card not allowed
-        }
-    }
 }

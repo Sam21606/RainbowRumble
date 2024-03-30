@@ -21,7 +21,7 @@ object Datastore {
     val db = FirebaseFirestore.getInstance()
     var gameIdInDB = "1"
     var cardViewed = 0
-    lateinit var unoList:MutableList<UnoCardLink>
+    var cardList : MutableList<UnoCardLink> = mutableListOf()
     var playerHand1 : MutableList<UnoCard> = mutableListOf()
     var playerHand2 : MutableList<UnoCard> = mutableListOf()
     var playerHand3 : MutableList<UnoCard> = mutableListOf()
@@ -30,6 +30,8 @@ object Datastore {
     var playerHand6 : MutableList<UnoCard> = mutableListOf()
     var playerHand7 : MutableList<UnoCard> = mutableListOf()
     lateinit var listOfCardsToGiveLink : MutableList<UnoCard>
+    var cardsOnAdaperGotClicked = false
+    var playedCardPositionInPlayerHand = 0
 
 
     fun createCards(){
@@ -109,23 +111,6 @@ object Datastore {
             .update(answer)
     }
 
-    fun drawCardToDB(){
-        val changes: MutableMap<String, Any> = hashMapOf(
-            "cardHolder" to "$cardHolder",
-            "unoCardList" to "$unoCardList",
-            "playerTurn" to playerTurn,
-            "playerHand1" to "${playerHands[1]}",
-            "playerHand2" to "${playerHands[2]}",
-            "playerHand3" to "${playerHands[3]}",
-            "playerHand4" to "${playerHands[4]}",
-            "playerHand5" to "${playerHands[5]}",
-            "playerHand6" to "${playerHands[6]}",
-            "playerHand7" to "${playerHands[7]}",
-        )
-        db.collection("Games").document(gameIdInDB)
-            .update(changes)
-    }
-
     fun createGame(){
             db.collection("Games")// Wählt die collection Games als path aus
                 .add(firstplayer) //fügt Varibale firstplayer zu neu erstelltem Dokument hinzu
@@ -143,272 +128,271 @@ object Datastore {
     }
 
     fun setPlayerHandToViewList(){
-        unoList = mutableListOf()
         cardViewed = 0
-        unoList.clear()
+        cardList.clear()
         for (index in (0 until listOfCardsToGiveLink.size)) {
             when (listOfCardsToGiveLink[cardViewed].number){
                 "1" -> {
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
                 }
                 "2" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "3" -> {
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "4" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "5" -> {
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "6" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "7" -> {
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "8" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
                         }
                     }
 
                 }
                 "9" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "Draw Two" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "Reverse"->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "Skip" ->{
-                    when (playerHands[playerNumber]?.get(cardViewed)?.color){
+                    when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
 
                         }
                         "Blue"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Green"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                         "Yellow"->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                         }
                     }
 
                 }
                 "Wild" ->{
-                            unoList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
 
                 }
                 "Draw Four" ->{
-                            unoList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                 }
 
 
             }
             cardViewed += 1
-            println("biiiite $unoList")
+            println("biiiite $cardList")
         }
 
     }
@@ -445,8 +429,65 @@ object Datastore {
         println("liste playedcard $playedCard")
     }
 
+    fun checkIfCardCanBePlayed() {
+        //Prüft ob Karte gelegt werden darf indem geprüft wird ob nummer oder Farbe gleich ist oder ob es eine Spezail karte ist
+        if (cardHolder[0].number == "Draw Two" ||cardHolder[0].number == "Draw Four" ) {
+            checkIfPlayerCanCounterCardDraw()
+        }else if( cardHolder[0].number == "Draw Two"){
+            if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four"){
+                playCard()
+            } else{
+                TODO("Card Denied")
+            }
+        }else if (cardHolder[0].number == "Draw Four"){
+            if (playedCard[0].number == "Draw Four"){
+                playCard()
+            }else{
+                TODO("Card Denied")
+            }
+        }else {
+            if (playedCard[0].color == cardHolder[0].color) {
+                playCard()
+            } else if (playedCard[0].number == cardHolder[1].number) {
+                playCard()
+            } else if (playedCard[0].color == "Black") {
+                playCard()
+            } else {
+                // Card not allowed
+            }
+        }
+    }
 
+    private fun checkIfPlayerCanCounterCardDraw() {
+        var cardToCheck = 0
+        for (index in (0 until playerHands[playerNumber]!!.size)){
+            if (playerHands[playerNumber]!![cardToCheck].number == "Draw Two" || playerHands[playerNumber]!![cardToCheck].number == "Draw Four" ){
+                drawCardsForPlayer()
+            }
+        }
+    }
 
+    private fun drawCardsForPlayer() {
+        if (playedCard[0].number == "Draw Two"){
+            for (i in 1 .. 2){
+                drawCard()
+            }
+        }else{
+            for (i in 1 .. 4){
+                drawCard()
+            }
+        }
+    }
+
+    fun drawCard(){
+        playerHands[playerNumber]?.add(unoCardList[0])
+        unoCardList.removeAt(0)
+    }
+
+    private fun playCard() {
+        cardHolder.add(playedCard[0])
+        playerHands[playerNumber]!!.removeAt(playedCardPositionInPlayerHand)
+    }
 
 
 }
