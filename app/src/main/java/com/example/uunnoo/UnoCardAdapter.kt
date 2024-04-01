@@ -33,14 +33,10 @@ class UnoCardAdapter(private val cardList: MutableList<UnoCardLink>) :
         val cards = cardList[position]
         holder.cardId.setImageResource(cards.link)
         holder.playCardButton.setOnClickListener{
-            onButtonClick?.invoke(cards)
             Datastore.playedCardPositionInPlayerHand = cards.positionInPlayerHand
+            Datastore.playedCard.clear()
+            Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]!![cards.positionInPlayerHand])
             Datastore.checkIfCardCanBePlayed()
-            //Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]!!.get(cards.positionInPlayerHand))
-            //Datastore.playerHands[Datastore.playerNumber]?.removeAt(cards.positionInPlayerHand)
-            //Datastore.addToDB()
-            // ermöglicht das Abfragen des clickes und signalisiert der Game.kt das die Anzeige angepasst werden muss
-            //Datastore.cardsOnAdaperGotClicked = true
         }
     }
 

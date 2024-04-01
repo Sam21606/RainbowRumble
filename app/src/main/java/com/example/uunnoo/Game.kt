@@ -63,10 +63,6 @@ class Game : AppCompatActivity() {
             //playCard()
         Datastore.addToDB()
         getDBandDBChanges()
-        while (Datastore.cardsOnAdaperGotClicked){
-            changeDisplayedItems()
-            Datastore.cardsOnAdaperGotClicked = false
-        }
 
         println("whuut ${Datastore.cardHolder}")
     }
@@ -266,7 +262,7 @@ class Game : AppCompatActivity() {
 
     }
 
-    private fun changeDisplayedItems() {
+    fun changeDisplayedItems() {
         getLinkForCardHolder()
         getUnoCardDataForAdapter()
         changeShownText()
@@ -494,7 +490,7 @@ class Game : AppCompatActivity() {
     private fun getLinkForCardHolder(){
         Datastore.listOfCardsToGiveLink = Datastore.cardHolder
         Datastore.setPlayerHandToViewList()
-        //cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size].link)
+        cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size -1].link)
     }
 
     private fun allowGameTurn() {

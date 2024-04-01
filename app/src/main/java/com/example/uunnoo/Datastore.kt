@@ -30,11 +30,10 @@ object Datastore {
     var playerHand6 : MutableList<UnoCard> = mutableListOf()
     var playerHand7 : MutableList<UnoCard> = mutableListOf()
     lateinit var listOfCardsToGiveLink : MutableList<UnoCard>
-    var cardsOnAdaperGotClicked = false
     var playedCardPositionInPlayerHand = 0
-    var cardCanBePlayed = false
     var anyCardCanBePlayed = true
     var rotationDirection = true
+    var haveCardsToBeDrawn = false
 
 
     fun createCards(){
@@ -81,10 +80,8 @@ object Datastore {
         println("$playerCount")
         // Teile jedem Spieler 7 zufällige Karten zu
         for (player in 1..playerCount) {
-            println("ich wurde 1")
             playerHands[player] = mutableListOf()
             for (i in 1..7) {
-                println("ich wurde 2")
                 playerHands[player]?.add(unoCardList[0])
                 //Fügt die Karten den Einzelnen Spielern hinzu
                 unoCardList.removeAt(0)
@@ -130,26 +127,46 @@ object Datastore {
                 }
     }
 
+
     fun setPlayerHandToViewList(){
         cardViewed = 0
         cardList.clear()
         for (index in (0 until listOfCardsToGiveLink.size)) {
             when (listOfCardsToGiveLink[cardViewed].number){
-                "1" -> {
+                "0" -> {
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
+
+                        }
+                    }
+                }
+                "1" -> {
+                    when (listOfCardsToGiveLink[cardViewed].color){
+                        "Red"->{
+                            cardList.add(UnoCardLink(R.drawable.pinkcard1, cardViewed))
+                        }
+                        "Blue"->{
+                            cardList.add(UnoCardLink(R.drawable.bluecard1, cardViewed))
+
+                        }
+                        "Green"->{
+                            cardList.add(UnoCardLink(R.drawable.greencard1, cardViewed))
+
+                        }
+                        "Yellow"->{
+                            cardList.add(UnoCardLink(R.drawable.yellowcard1, cardViewed))
 
                         }
                     }
@@ -157,19 +174,19 @@ object Datastore {
                 "2" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard2, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard2, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard2, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard2, cardViewed))
 
                         }
                     }
@@ -178,18 +195,18 @@ object Datastore {
                 "3" -> {
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard3, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard3, cardViewed))
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard3, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard3, cardViewed))
 
                         }
                     }
@@ -198,19 +215,19 @@ object Datastore {
                 "4" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard4, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard4, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard4, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard4, cardViewed))
 
                         }
                     }
@@ -219,19 +236,19 @@ object Datastore {
                 "5" -> {
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard5, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard5, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard5, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard5, cardViewed))
 
                         }
                     }
@@ -240,19 +257,19 @@ object Datastore {
                 "6" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard6, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard6, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard6, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard6, cardViewed))
 
                         }
                     }
@@ -261,19 +278,19 @@ object Datastore {
                 "7" -> {
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard7, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard7, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard7, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard7, cardViewed))
 
                         }
                     }
@@ -282,19 +299,19 @@ object Datastore {
                 "8" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard8, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard8, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard8, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard8, cardViewed))
                         }
                     }
 
@@ -302,19 +319,19 @@ object Datastore {
                 "9" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard9, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard9, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard9, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard9, cardViewed))
 
                         }
                     }
@@ -323,19 +340,19 @@ object Datastore {
                 "Draw Two" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
 
                         }
                     }
@@ -344,19 +361,19 @@ object Datastore {
                 "Reverse"->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.cardyellow8, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
 
                         }
                     }
@@ -365,26 +382,26 @@ object Datastore {
                 "Skip" ->{
                     when (listOfCardsToGiveLink[cardViewed].color){
                         "Red"->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
 
                         }
                         "Blue"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
 
                         }
                         "Green"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
 
                         }
                         "Yellow"->{
-                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
 
                         }
                     }
 
                 }
                 "Wild" ->{
-                            cardList.add(UnoCardLink(R.drawable.cardblue3, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
 
                 }
                 "Draw Four" ->{
@@ -435,53 +452,64 @@ object Datastore {
     fun checkIfCardCanBePlayed() {
         //Prüft ob Karte gelegt werden darf indem geprüft wird ob nummer oder Farbe gleich ist oder ob es eine Spezail karte ist
         anyCardCanBePlayed = true
-        if (cardHolder[0].number == "Draw Two" ||cardHolder[0].number == "Draw Four" ) {
-            checkIfPlayerCanCounterCardDraw()
+
+        if (cardHolder[cardHolder.size -1].number == "Draw Two" ||cardHolder[cardHolder.size -1].number == "Draw Four" ) {
+            if (!haveCardsToBeDrawn){
+                checkIfPlayerCanCounterCardDraw()
+                if (anyCardCanBePlayed) {
+                    if (cardHolder[cardHolder.size - 1].number == "Draw Two") {//check if last Card was Plus 2
+                        if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
+                            playCard()
+                        }
+                    } else if (cardHolder[cardHolder.size - 1].number == "Draw Four") {//check if last Card was Plus 4
+                        if (playedCard[0].number == "Draw Four") {
+                            playCard()
+                        }
+                    }
+                }
         }
-        if (anyCardCanBePlayed) {
-            if (cardHolder[0].number == "Draw Two") {//check if last Card was Plus 2
-                if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
-                    playCard()
-                }
-            } else if (cardHolder[0].number == "Draw Four") {//check if last Card was Plus 4
-                if (playedCard[0].number == "Draw Four") {
-                    playCard()
-                }
-            } else if (cardHolder[0].color == "Black") {//check if last Card was special Card
+
+            }else if (cardHolder[cardHolder.size -1].color == "Black") {//check if last Card was special Card
                 handleSpecialActions()
             } else {
-                if (playedCard[0].color == cardHolder[0].color) {// check if color matches
+                if (playedCard[0].color == cardHolder[cardHolder.size -1].color) {// check if color matches
                     playCard()
-                } else if (playedCard[0].number == cardHolder[0].number) {//check if number matches
+                    println("bist du leer Farbe ist gliech")
+                } else if (playedCard[0].number == cardHolder[cardHolder.size -1].number) {//check if number matches
                     playCard()
                 } else if (playedCard[0].color == "Black") {//check if card is specialcard
                     playCard()
                 }
             }
-        }
     }
 
     private fun checkIfPlayerCanCounterCardDraw() {
         var cardToCheck = 0
+        anyCardCanBePlayed = false
         for (index in (0 until playerHands[playerNumber]!!.size)){
-            if (playerHands[playerNumber]!![cardToCheck].number == "Draw Two" || playerHands[playerNumber]!![cardToCheck].number == "Draw Four" ){
-                handleSpecialActions()
-            }else if (playerHands[playerNumber]?.size   == cardToCheck){
-                anyCardCanBePlayed = false
+            if (playerHands[playerNumber]!![cardToCheck].number == "Draw Four" || playerHands[playerNumber]!![cardToCheck].number == cardHolder[cardHolder.size -1].number){
+                anyCardCanBePlayed = true
+            }else{
+                drawCards()
+            }
+            cardToCheck += 1
+        }
+    }
+
+    private fun drawCards() {
+        if (cardHolder[cardHolder.size -1].number == "Draw Two"){
+            for (i in 1 .. 2){
+                drawCard()
+            }
+        }else if (cardHolder[cardHolder.size -1].number == "Draw Four") {
+            for (i in 1..4) {
+                drawCard()
             }
         }
     }
 
     private fun handleSpecialActions() {
-        if (playedCard[0].number == "Draw Two"){
-            for (i in 1 .. 2){
-                drawCard()
-            }
-        }else if (playedCard[0].number == "Draw Four"){
-            for (i in 1 .. 4){
-                drawCard()
-            }
-        }else if (playedCard[0].number == "Color change"){
+        if (playedCard[0].number == "Color change"){
             TODO("add Color choosing mechanism")
         }else if (playedCard[0].number == "Skip"){
             playCard()
@@ -499,6 +527,8 @@ object Datastore {
     private fun playCard() {
         cardHolder.add(playedCard[0])
         playerHands[playerNumber]!!.removeAt(playedCardPositionInPlayerHand)
+        val game = Game()
+        game.changeDisplayedItems()
     }
 
     fun nextTurn(){
