@@ -29,11 +29,13 @@ object Datastore {
     var playerHand5 : MutableList<UnoCard> = mutableListOf()
     var playerHand6 : MutableList<UnoCard> = mutableListOf()
     var playerHand7 : MutableList<UnoCard> = mutableListOf()
-    lateinit var listOfCardsToGiveLink : MutableList<UnoCard>
+    var listOfCardsToGiveLink : MutableList<UnoCard> = mutableListOf()
     var playedCardPositionInPlayerHand = 0
     var anyCardCanBePlayed = true
     var rotationDirection = true
     var haveCardsToBeDrawn = false
+    var listOfPlayersPlaing : MutableList<Int> = mutableListOf(0,1,2,3,4,5,6)
+    var playerTurnListPosition = 0
 
 
     fun createCards(){
@@ -445,8 +447,6 @@ object Datastore {
         playerHands[5] = playerHand5
         playerHands[6] = playerHand6
         playerHands[7] = playerHand7
-        println("Liste playerhands $playerHands")
-        println("liste playedcard $playedCard")
     }
 
     fun checkIfCardCanBePlayed() {
@@ -529,23 +529,41 @@ object Datastore {
         playerHands[playerNumber]!!.removeAt(playedCardPositionInPlayerHand)
         val game = Game()
         game.changeDisplayedItems()
+        nextTurn()
+
     }
 
     fun nextTurn(){
-        if (rotationDirection){
-            if (playerTurn < playerNumber){
-                playerTurn += 1
-            }else{
-                playerTurn = 0
-            }
-        }else{
-            if (playerTurn > 0){
-                playerTurn -= 1
-            }else {
-                playerTurn = playerCount
-            }
+        var playerToCheck = 0
+        var playerSizeBefore = listOfPlayersPlaing.size
 
+        listOfPlayersPlaing.clear()
+        for ( index in (0 until playerHands.size -1)){
+            if(playerHands[playerToCheck]?.size !=  null){
+                listOfPlayersPlaing.add(playerToCheck)
+            }
+            playerToCheck += 1
         }
+
+        var playerSizeAfter = listOfPlayersPlaing.size
+        if (playerSizeAfter == playerSizeBefore){
+            if (rotationDirection){
+                if (playerTurnListPosition < playerSizeAfter){
+                    playerTurnListPosition += 1
+                }else{
+                    playerTurnListPosition = 0
+                }
+            }else{
+                if (playerTurnListPosition > 0){
+                    playerTurnListPosition -= 1
+                }else {
+                    playerTurnListPosition = listOfPlayersPlaing.size -1
+                }
+
+            }
+        }
+
+
     }
 
 
