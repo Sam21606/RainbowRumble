@@ -51,12 +51,8 @@ class GameSettings : AppCompatActivity() {
     }
 
     fun startGame(){
-        //Datastore.createCards()
-        //Datastore.dealCards()
-        //Datastore.addToDB()
         playercountChanger()
 
-        println("Ich wurde ausgeführt")
         if (Datastore.onOffline){
             val intent = Intent(this, OnlineConnection::class.java)
             startActivity(intent)

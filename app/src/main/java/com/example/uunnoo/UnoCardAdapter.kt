@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 class UnoCardAdapter(private val cardList: MutableList<UnoCardLink>) :
     RecyclerView.Adapter<UnoCardAdapter.CardViewHolder>() {
 
-        var onButtonClick : ((UnoCardLink) -> Unit)? = null
-
     class CardViewHolder (itemView: View) :RecyclerView.ViewHolder(itemView){
         val cardId : ImageView = itemView.findViewById(R.id.idOfCard)
         val playCardButton : Button = itemView.findViewById(R.id.playCardButton)
@@ -33,10 +31,12 @@ class UnoCardAdapter(private val cardList: MutableList<UnoCardLink>) :
         val cards = cardList[position]
         holder.cardId.setImageResource(cards.link)
         holder.playCardButton.setOnClickListener{
-            Datastore.playedCardPositionInPlayerHand = cards.positionInPlayerHand
-            Datastore.playedCard.clear()
-            Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]!![cards.positionInPlayerHand])
-            Datastore.checkIfCardCanBePlayed()
+            if (Datastore.playerTurn == Datastore.playerNumber){
+                Datastore.playedCardPositionInPlayerHand = cards.positionInPlayerHand
+                Datastore.playedCard.clear()
+                Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]!![cards.positionInPlayerHand])
+                Datastore.checkIfCardCanBePlayed()
+            }
         }
     }
 

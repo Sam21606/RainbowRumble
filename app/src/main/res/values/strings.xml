@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">uunnoo</string>
     <string name="legen">play</string>
+    <string name="blue">blue</string>
+    <string name="pink">pink</string>
+    <string name="yellow">yellow</string>
+    <string name="green">green</string>
 </resources>
