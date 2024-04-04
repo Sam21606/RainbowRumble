@@ -103,7 +103,6 @@ class OnlineConnection : AppCompatActivity() {
         }else if (buttonJoinClicked == 0 && buttonCreateClicked == 1){
             //copy code first meldung
         }else if(buttonJoinClicked == 0 && buttonCreateClicked >= 2){
-            Datastore.playerNumber = playersconnected + 1
             val intent = Intent(this, Game::class.java)
             startActivity(intent)
             Datastore.initializeDBData()

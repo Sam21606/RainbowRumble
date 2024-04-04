@@ -64,9 +64,11 @@ class Game : AppCompatActivity() {
         changeDisplayedItems()
 
         ziehen.setOnClickListener {
-            if (Datastore.isPlayerOnTurn){
+            println("Halloo ${Datastore.playerNumber} ${Datastore.playerTurn}")
+            if(Datastore.playerNumber == Datastore.playerTurn){
                 drawCard()
                 changeDisplayedItems()
+                Datastore.nextTurn()
             }
         }
 
@@ -130,7 +132,6 @@ class Game : AppCompatActivity() {
         Datastore.unoCardList.removeAt(0)
         changeDisplayedItems()
         Datastore.addToDB()
-        //turnEnd()
     }
 
 
@@ -360,6 +361,7 @@ class Game : AppCompatActivity() {
     }
 
     private fun getLinkForCardHolder(){
+        println("wtf22 ${Datastore.cardHolder}")
         Datastore.listOfCardsToGiveLink = Datastore.cardHolder
         Datastore.setPlayerHandToViewList()
         println("wtf3 ${Datastore.cardList}")
@@ -371,27 +373,7 @@ class Game : AppCompatActivity() {
         ziehen.visibility == View.VISIBLE
     }
 
-    private fun turnEnd() {
-        ziehen.visibility == View.INVISIBLE
-        if (Datastore.playerTurn == Datastore.playerCount){
-            Datastore.playerTurn = 0
-        }else{
-            Datastore.playerTurn += 1
-        }
-    }
-
-    fun playersTurn(){
-        Datastore.isPlayerOnTurn = true
-    }
-
-    fun colorChoosingAction(){
-        colorChoosingContainer.visibility = View.VISIBLE
-    }
-
-
-
     fun getDBandDBChanges() {
-        val game = Game()
 
         Datastore.db.collection("Games").document(Datastore.gameIdInDB)
             .addSnapshotListener { snapshot, exception ->
@@ -452,7 +434,9 @@ class Game : AppCompatActivity() {
                     // Handle empty string
                 }
 
-                Datastore.playerTurn = snapshot?.getLong("playerTurn")?.toInt()!!
+                Datastore.cardsToDraw = snapshot?.getLong("cardsToDraw")?.toInt()!!
+                Datastore.playerTurn = snapshot.getLong("playerTurn")?.toInt()!!
+                Datastore.choosenColor = snapshot.get("choosenColor")?.toString()!!
 
                 val playerHand1FromDB = snapshot.get("playerHand1") as? String ?: ""
                 val string1List = listOf(playerHand1FromDB)
@@ -556,17 +540,11 @@ class Game : AppCompatActivity() {
                 } else {
                 }
 
-                if (Datastore.playerNumber == Datastore.playerTurn) {
-                    game.playersTurn()
+                changeDisplayedItems()
+                if (Datastore.playerTurn == Datastore.playerNumber){
+                    Datastore.checkIfPlayerCanCounterCardDraw()
                 }
-
-
-
-                game.changeDisplayedItems()
             }
-        if (Datastore.playerTurn == Datastore.playerNumber) {
-            game.allowGameTurn()
-        }
 
     }
 

@@ -17,8 +17,7 @@ object Datastore {
     var playedCard: MutableList<UnoCard> = mutableListOf()
     var cardHolder: MutableList<UnoCard> = mutableListOf()
     var playerTurn = 1
-    var playerNumber = 2
-    var isPlayerOnTurn = false
+    var playerNumber = 1
     val db = FirebaseFirestore.getInstance()
     var gameIdInDB = "1"
     var cardViewed = 0
@@ -32,12 +31,12 @@ object Datastore {
     var playerHand7: MutableList<UnoCard> = mutableListOf()
     var listOfCardsToGiveLink: MutableList<UnoCard> = mutableListOf()
     var playedCardPositionInPlayerHand = 0
-    var anyCardCanBePlayed = true
+    var anyCardCanBePlayed = false
     var rotationDirection = true
-    var haveCardsToBeDrawn = false
-    var listOfPlayersPlaing: MutableList<Int> = mutableListOf(0, 1, 2, 3, 4, 5, 6)
+    var listOfPlayersPlaing: MutableList<Int> = mutableListOf()
     var playerTurnListPosition = 0
     var choosenColor = ""
+    var cardsToDraw = 0
 
 
     fun createCards() {
@@ -116,10 +115,12 @@ object Datastore {
             "playerHand4" to "${playerHands[4]}",
             "playerHand5" to "${playerHands[5]}",
             "playerHand6" to "${playerHands[6]}",
-            "playerHand7" to "${playerHands[7]}"
+            "playerHand7" to "${playerHands[7]}",
+            "cardsToDraw" to cardsToDraw,
+            "choosenColor" to choosenColor
         )
 
-        db.collection("Games").document("$gameIdInDB")
+        db.collection("Games").document(gameIdInDB)
             .update(answer)
     }
 
@@ -131,10 +132,10 @@ object Datastore {
 
                 firstplayer = hashMapOf( // Pinkefiniert Variable wegen änderung im Wert
                     "playersconnected" to 0,
-                    "gameIdInDB" to "$gameIdInDB"
+                    "gameIdInDB" to gameIdInDB
                 )
                 //fügt Varaible mit korrekter ID zum kreatiren Dokument hinzu
-                db.collection("Games").document("$gameIdInDB")
+                db.collection("Games").document(gameIdInDB)
                     .update(firstplayer)
             }
     }
@@ -513,12 +514,10 @@ object Datastore {
 
     fun checkIfCardCanBePlayed() {
         //Prüft ob Karte gelegt werden darf indem geprüft wird ob nummer oder Farbe gleich ist oder ob es eine Spezail karte ist
-        anyCardCanBePlayed = true
 
-        if (cardHolder[cardHolder.size - 1].number == "Draw Two" || cardHolder[cardHolder.size - 1].number == "Draw Four") {
-            if (!haveCardsToBeDrawn) {
+        if (anyCardCanBePlayed) {
                 checkIfPlayerCanCounterCardDraw()
-                if (anyCardCanBePlayed) {
+                if (cardsToDraw > 0) {
                     if (cardHolder[cardHolder.size - 1].number == "Draw Two") {//check if last Card was Plus 2
                         if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
                             playCard()
@@ -529,8 +528,7 @@ object Datastore {
                         }
                     }
                 }
-            }
-
+            println("Ich wurde ausgeführt $anyCardCanBePlayed")
         } else if (cardHolder[cardHolder.size - 1].color == "Black") {//check if last Card was special Card
             if (choosenColor == playedCard[0].color || playedCard[0].color == "Black") {
                 playCard()
@@ -549,34 +547,31 @@ object Datastore {
         }
     }
 
-    private fun checkIfPlayerCanCounterCardDraw() {
-        var cardToCheck = 0
-        anyCardCanBePlayed = false
-        for (index in (0 until playerHands[playerNumber]!!.size)) {
-            if (playerHands[playerNumber]!![cardToCheck].number == "Draw Four" || playerHands[playerNumber]!![cardToCheck].number == cardHolder[cardHolder.size - 1].number) {
-                anyCardCanBePlayed = true
-            } else {
+    fun checkIfPlayerCanCounterCardDraw() {
+        if (cardsToDraw > 0){
+            var cardToCheck = 0
+            anyCardCanBePlayed = false
+            for (index in (0 until playerHands[playerNumber]!!.size)) {
+                if (playerHands[playerNumber]!![cardToCheck].number == "Draw Four" || playerHands[playerNumber]!![cardToCheck].number == cardHolder[cardHolder.size - 1].number) {
+                    anyCardCanBePlayed = true
+                }
+                cardToCheck += 1
+            }
+            if (!anyCardCanBePlayed){
                 drawCards()
             }
-            cardToCheck += 1
         }
     }
 
     private fun drawCards() {
-        if (cardHolder[cardHolder.size - 1].number == "Draw Two") {
-            for (i in 1..2) {
-                drawCard()
-            }
-        } else if (cardHolder[cardHolder.size - 1].number == "Draw Four") {
-            for (i in 1..4) {
-                drawCard()
-            }
+        for (i in 1..cardsToDraw) {
+            drawCard()
         }
     }
 
     private fun handleSpecialActions() {
         val game = Game()
-        if (playedCard[0].number == "Color change") {
+        if (playedCard[0].number == "Color change" || playedCard[0].number == "Draw Four") {
             game.setColorChoosingViewVisible()
         } else if (playedCard[0].number == "Skip") {
             playCard()
@@ -599,40 +594,62 @@ object Datastore {
     }
 
     private fun playCard() {
+        if (playedCard[0].number == "Draw Two"){
+            cardsToDraw += 2
+        }else if (playedCard[0].number == "Draw Four"){
+            cardsToDraw += 4
+        }
         val game = Game()
         cardHolder.add(playedCard[0])
         playerHands[playerNumber]!!.removeAt(playedCardPositionInPlayerHand)
         game.changeDisplayedItems()
         nextTurn()
-
+        addToDB()
     }
 
 
     fun nextTurn() {
-        var playerToCheck = 0
+        println("Hallo ich wurde ausgeführt")
+        var playerToCheck = 1
+        if (listOfPlayersPlaing.size == 0){
+            for (index in (0 until playerHands.size)) {
+                if (playerHands[playerToCheck]?.size != 0) {
+                    listOfPlayersPlaing.add(playerToCheck)
+                }
+                playerToCheck += 1
+            }
+        }
+        playerTurnListPosition = listOfPlayersPlaing.indexOf(playerTurn)
         val playerSizeBefore = listOfPlayersPlaing.size
 
+        playerToCheck = 1
+
         listOfPlayersPlaing.clear()
-        for (index in (0 until playerHands.size - 1)) {
-            if (playerHands[playerToCheck]?.size != null) {
+        for (index in (0 until playerHands.size)) {
+            if (playerHands[playerToCheck]?.size != 0) {
                 listOfPlayersPlaing.add(playerToCheck)
             }
             playerToCheck += 1
         }
+        println("Hallo $listOfPlayersPlaing")
+        println("Hallo $playerTurnListPosition")
 
         val playerSizeAfter = listOfPlayersPlaing.size
+        println("Hallo $playerSizeBefore $playerSizeAfter")
         if (playerSizeAfter == playerSizeBefore) {
             if (rotationDirection) {
-                if (playerTurnListPosition < playerSizeAfter) {
+                if (playerTurnListPosition < playerSizeAfter -1) {
                     playerTurnListPosition += 1
-                } else {
-                    playerTurnListPosition = 1
+                    println("Hallo1")
+                } else if(playerTurnListPosition == playerSizeAfter -1){
+                    playerTurnListPosition = 0
+                    println("Hallo2")
                 }
             } else {
                 if (playerTurnListPosition > 1) {
                     playerTurnListPosition -= 1
-                } else {
-                    playerTurnListPosition = listOfPlayersPlaing.size
+                } else if (playerTurnListPosition == 1){
+                    playerTurnListPosition = listOfPlayersPlaing.size -1
                 }
 
             }
@@ -640,11 +657,15 @@ object Datastore {
             if (playerTurnListPosition > 1) {
                 playerTurnListPosition -= 1
             } else {
-                playerTurnListPosition = listOfPlayersPlaing.size
+                playerTurnListPosition = listOfPlayersPlaing.size -1
             }
         }
+        println("Hallo $playerTurnListPosition")
+        println("Hallo $playerTurn")
 
         playerTurn = listOfPlayersPlaing[playerTurnListPosition]
+
+        println("Hallo $playerTurn")
     }
 
 
@@ -812,15 +833,6 @@ object Datastore {
                     mergePlayerhands()
                 } else {
                 }
-
-                if (playerNumber == playerTurn) {
-                    game.playersTurn()
-                }
-
             }
-        if (playerTurn == playerNumber) {
-            game.allowGameTurn()
-        }
-
     }
 }
