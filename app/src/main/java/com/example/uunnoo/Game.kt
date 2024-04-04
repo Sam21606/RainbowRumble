@@ -66,9 +66,9 @@ class Game : AppCompatActivity() {
         ziehen.setOnClickListener {
             println("Halloo ${Datastore.playerNumber} ${Datastore.playerTurn}")
             if(Datastore.playerNumber == Datastore.playerTurn){
-                drawCard()
-                changeDisplayedItems()
                 Datastore.nextTurn()
+                drawCard()
+                //changeDisplayedItems()
             }
         }
 

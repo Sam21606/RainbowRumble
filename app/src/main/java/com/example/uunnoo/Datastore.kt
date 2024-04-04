@@ -516,29 +516,26 @@ object Datastore {
         //Prüft ob Karte gelegt werden darf indem geprüft wird ob nummer oder Farbe gleich ist oder ob es eine Spezail karte ist
 
         if (anyCardCanBePlayed) {
-                checkIfPlayerCanCounterCardDraw()
-                if (cardsToDraw > 0) {
                     if (cardHolder[cardHolder.size - 1].number == "Draw Two") {//check if last Card was Plus 2
                         if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
                             playCard()
+                            println("Ich wurde 1")
                         }
                     } else if (cardHolder[cardHolder.size - 1].number == "Draw Four") {//check if last Card was Plus 4
                         if (playedCard[0].number == "Draw Four") {
                             playCard()
+                            println("Ich wurde 2")
                         }
                     }
-                }
             println("Ich wurde ausgeführt $anyCardCanBePlayed")
         } else if (cardHolder[cardHolder.size - 1].color == "Black") {//check if last Card was special Card
             if (choosenColor == playedCard[0].color || playedCard[0].color == "Black") {
-                playCard()
-                handleSpecialActions()// weil es möglich ist auch eine Black card zu legen
+                playCard()// weil es möglich ist auch eine Black card zu legen
             }
         } else {
             if (playedCard[0].color == "Black") {// check if color matches
                 println("wtf we had a Black card")
                 playCard()
-                handleSpecialActions()
             } else if (playedCard[0].number == cardHolder[cardHolder.size - 1].number) {//check if number matches
                 playCard()
             } else if (playedCard[0].color == cardHolder[cardHolder.size - 1].color) {//check if Played card is specialcard
@@ -548,6 +545,7 @@ object Datastore {
     }
 
     fun checkIfPlayerCanCounterCardDraw() {
+        println("Es wurde überprüft")
         if (cardsToDraw > 0){
             var cardToCheck = 0
             anyCardCanBePlayed = false
@@ -559,6 +557,8 @@ object Datastore {
             }
             if (!anyCardCanBePlayed){
                 drawCards()
+                addToDB()
+                println("es wurde gezogen werden ")
             }
         }
     }
@@ -566,7 +566,9 @@ object Datastore {
     private fun drawCards() {
         for (i in 1..cardsToDraw) {
             drawCard()
+            println("Es wurden karten gezogen ")
         }
+        cardsToDraw = 0
     }
 
     private fun handleSpecialActions() {
@@ -574,8 +576,7 @@ object Datastore {
         if (playedCard[0].number == "Color change" || playedCard[0].number == "Draw Four") {
             game.setColorChoosingViewVisible()
         } else if (playedCard[0].number == "Skip") {
-            playCard()
-            playerTurn += 1
+            nextTurn()
         } else if (playedCard[0].number == "Reverse") {
             rotationDirection = !rotationDirection
         }
@@ -594,10 +595,13 @@ object Datastore {
     }
 
     private fun playCard() {
+        handleSpecialActions()
         if (playedCard[0].number == "Draw Two"){
             cardsToDraw += 2
+            anyCardCanBePlayed = false
         }else if (playedCard[0].number == "Draw Four"){
             cardsToDraw += 4
+            anyCardCanBePlayed = false
         }
         val game = Game()
         cardHolder.add(playedCard[0])
