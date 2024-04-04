@@ -32,8 +32,7 @@ object Datastore {
     var listOfCardsToGiveLink: MutableList<UnoCard> = mutableListOf()
     var playedCardPositionInPlayerHand = 0
     var anyCardCanBePlayed = false
-    var rotationDirection = false
-    // var rotationDirection = true
+    var rotationDirection = true
     var listOfPlayersPlaing: MutableList<Int> = mutableListOf()
     var playerTurnListPosition = 0
     var choosenColor = ""
@@ -71,17 +70,14 @@ object Datastore {
             unoCardList.add(UnoCard(wildCard, "Black"))
             unoCardList.add(UnoCard(wildCard, "Black"))
         }
-        println("teeeeeest ${unoCardList[0]}")
     }
 
     fun dealCards() {
-        println("ich wurde ")
         // Mische die Karten
         unoCardList.shuffle()
 
         // Initialisiere eine Map, um Karten an Spieler zu verteilen
 
-        println("$playerCount")
         // Teile jedem Spieler 7 zufällige Karten zu
         for (player in 1..playerCount) {
             playerHands[player] = mutableListOf()
@@ -94,15 +90,9 @@ object Datastore {
             }
         }
 
-        println("Hilfe1 ${playerHands[0]}")
-        println("Hilfe1 ${playerHands[1]}")
-
         //Fügt Anfangskarte hinzu
-        println("wtf6 $cardHolder")
-        println("wtf7 $unoCardList")
         cardHolder.add(unoCardList[0])
         unoCardList.removeAt(0)
-        println("wtf5 $cardHolder")
     }
 
     fun addToDB() {
@@ -395,22 +385,22 @@ object Datastore {
                 "Draw Two" -> {
                     when (listOfCardsToGiveLink[cardViewed].color) {
                         "Pink" -> {
-                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pink2, cardViewed))
 
                         }
 
                         "Blue" -> {
-                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.blue2, cardViewed))
 
                         }
 
                         "Green" -> {
-                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.green2, cardViewed))
 
                         }
 
                         "Yellow" -> {
-                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellow2, cardViewed))
 
                         }
                     }
@@ -420,22 +410,22 @@ object Datastore {
                 "Reverse" -> {
                     when (listOfCardsToGiveLink[cardViewed].color) {
                         "Pink" -> {
-                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkreverse, cardViewed))
 
                         }
 
                         "Blue" -> {
-                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.bluereverse, cardViewed))
 
                         }
 
                         "Green" -> {
-                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greenreverse, cardViewed))
 
                         }
 
                         "Yellow" -> {
-                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowreverse, cardViewed))
 
                         }
                     }
@@ -445,22 +435,22 @@ object Datastore {
                 "Skip" -> {
                     when (listOfCardsToGiveLink[cardViewed].color) {
                         "Pink" -> {
-                            cardList.add(UnoCardLink(R.drawable.pinkcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.pinkskip, cardViewed))
 
                         }
 
                         "Blue" -> {
-                            cardList.add(UnoCardLink(R.drawable.bluecard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.blueskip, cardViewed))
 
                         }
 
                         "Green" -> {
-                            cardList.add(UnoCardLink(R.drawable.greencard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.greenskip, cardViewed))
 
                         }
 
                         "Yellow" -> {
-                            cardList.add(UnoCardLink(R.drawable.yellowcard0, cardViewed))
+                            cardList.add(UnoCardLink(R.drawable.yellowskip, cardViewed))
 
                         }
                     }
@@ -468,40 +458,20 @@ object Datastore {
                 }
 
                 "Color change" -> {
-                    cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                    cardList.add(UnoCardLink(R.drawable.wild, cardViewed))
 
                 }
 
                 "Draw Four" -> {
-                    cardList.add(UnoCardLink(R.drawable.kartenbckgrnd, cardViewed))
+                    cardList.add(UnoCardLink(R.drawable.wilddraw4, cardViewed))
 
                 }
 
 
             }
             cardViewed += 1
-            println("biiiite $cardList")
         }
 
-    }
-
-
-    fun dealCards2() {
-        println("ich wurde ")
-        // Mische die Karten
-        unoCardList.shuffle()
-
-        // Teile jedem Spieler(playercount) 7 zufällige Karten zu
-        for (player in 1..playerCount) {
-            playerHands[player] = mutableListOf()
-            for (i in 1..7) {
-                playerHands[player]?.add(unoCardList[0])
-                //Fügt die Karten den Einzelnen Spielern hinzu
-                unoCardList.removeAt(0)
-                // Entferne die Karte aus dem Deck
-
-            }
-        }
     }
 
     fun mergePlayerhands() {
@@ -521,22 +491,18 @@ object Datastore {
                     if (cardHolder[cardHolder.size - 1].number == "Draw Two") {//check if last Card was Plus 2
                         if (playedCard[0].number == "Draw Two" || playedCard[0].number == "Draw Four") {
                             playCard()
-                            println("Ich wurde 1")
                         }
                     } else if (cardHolder[cardHolder.size - 1].number == "Draw Four") {//check if last Card was Plus 4
                         if (playedCard[0].number == "Draw Four") {
                             playCard()
-                            println("Ich wurde 2")
                         }
                     }
-            println("Ich wurde ausgeführt $anyCardCanBePlayed")
         } else if (cardHolder[cardHolder.size - 1].color == "Black") {//check if last Card was special Card
             if (choosenColor == playedCard[0].color || playedCard[0].color == "Black") {
                 playCard()
             }
         } else {
             if (playedCard[0].color == "Black") {// check if color matches
-                println("wtf we had a Black card")
                 playCard()
             } else if (playedCard[0].number == cardHolder[cardHolder.size - 1].number) {//check if number matches
                 playCard()
@@ -547,7 +513,6 @@ object Datastore {
     }
 
     fun checkIfPlayerCanCounterCardDraw() {
-        println("Es wurde überprüft")
         if (cardsToDraw > 0){
             var cardToCheck = 0
             anyCardCanBePlayed = false
@@ -561,7 +526,6 @@ object Datastore {
                 drawCards()
                 nextTurn()
                 addToDB()
-                println("es wurde gezogen werden ")
             }
         }
     }
@@ -569,7 +533,6 @@ object Datastore {
     private fun drawCards() {
         for (i in 1..cardsToDraw) {
             drawCard()
-            println("Es wurden karten gezogen ")
         }
         cardsToDraw = 0
     }
@@ -595,7 +558,6 @@ object Datastore {
         }
         playerHands[playerNumber]?.add(unoCardList[0])
         unoCardList.removeAt(0)
-        println("hallo1 $playerNumber")
     }
 
     private fun playCard() {
@@ -617,7 +579,6 @@ object Datastore {
 
 
     fun nextTurn() {
-        println("Hallo ich wurde ausgeführt")
         var playerToCheck = 1
         if (listOfPlayersPlaing.size == 0){
             for (index in (0 until playerHands.size)) {
@@ -639,20 +600,14 @@ object Datastore {
             }
             playerToCheck += 1
         }
-        println("Hallo $rotationDirection")
-        println("Hallo $listOfPlayersPlaing")
-        println("Hallo $playerTurnListPosition")
 
         val playerSizeAfter = listOfPlayersPlaing.size
-        println("Hallo $playerSizeBefore $playerSizeAfter")
         if (playerSizeAfter == playerSizeBefore) {
             if (rotationDirection) {
                 if (playerTurnListPosition < playerSizeAfter -1) {
                     playerTurnListPosition += 1
-                    println("Hallo1")
                 } else if(playerTurnListPosition == playerSizeAfter -1){
                     playerTurnListPosition = 0
-                    println("Hallo2")
                 }
             } else {
                 if (playerTurnListPosition > 0) {
@@ -669,12 +624,7 @@ object Datastore {
                 playerTurnListPosition = listOfPlayersPlaing.size -1
             }
         }
-        println("Hallo $playerTurnListPosition")
-        println("Hallo $playerTurn")
-
         playerTurn = listOfPlayersPlaing[playerTurnListPosition]
-
-        println("Hallo $playerTurn")
     }
 
 
@@ -815,7 +765,6 @@ object Datastore {
                 val playerHand6FromDB = result.get("playerHand6") as? String ?: ""
                 val string6List = listOf(playerHand6FromDB)
                 if (playerHand6FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand6FromDB")
                     playerHand6 = string6List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -830,7 +779,6 @@ object Datastore {
                 val playerHand7FromDB = result.get("playerHand7") as? String ?: ""
                 val stringList7 = listOf(playerHand7FromDB)
                 if (playerHand7FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand7FromDB")
                     playerHand7 = stringList7.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)

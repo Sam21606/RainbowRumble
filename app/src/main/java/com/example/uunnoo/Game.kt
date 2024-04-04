@@ -72,8 +72,7 @@ class Game : AppCompatActivity() {
         changeDisplayedItems()
 
         ziehen.setOnClickListener {
-            println("Halloo ${Datastore.playerNumber} $playerTurn")
-            if(Datastore.playerNumber == playerTurn){
+            if(playerNumber == playerTurn){
                 Datastore.nextTurn()
                 drawCard()
             }
@@ -81,14 +80,7 @@ class Game : AppCompatActivity() {
 
         Datastore.playedCard.add(Datastore.unoCardList[0])
         Datastore.unoCardList.removeAt(0)
-        println("Hilfe3 ${Datastore.playerHands[0]}")
-        println("Hilfe3 ${Datastore.playerHands[1]}")
         Datastore.addToDB()
-        println("Hilfe4 ${Datastore.playerHands[0]}")
-        println("Hilfe4 ${Datastore.playerHands[1]}")
-        //Datastore.getDBandDBChanges()
-        println("Hilfe5 ${Datastore.playerHands[0]}")
-        println("Hilfe5 ${Datastore.playerHands[1]}")
         setupColorChangeButtons()
         getDBandDBChanges()
     }
@@ -124,14 +116,12 @@ class Game : AppCompatActivity() {
     }
 
     private fun getUnoCardDataForAdapter() {
-        println("Hilfe2 ${Datastore.playerHands[0]}")
-        println("Hilfe2 ${Datastore.playerHands[1]}")
         // setzt die zu verlinkenden karten für die unoliste
-        Datastore.listOfCardsToGiveLink = Datastore.playerHands[Datastore.playerNumber]!!
+        Datastore.listOfCardsToGiveLink = Datastore.playerHands[playerNumber]!!
         cardToAddToAdapter = 0
         unoList.clear()
-        for(i in Datastore.playerHands[Datastore.playerNumber]!!) {
-            unoList.add(Datastore.playerHands[Datastore.playerNumber]?.get(cardToAddToAdapter)!!)
+        for(i in Datastore.playerHands[playerNumber]!!) {
+            unoList.add(Datastore.playerHands[playerNumber]?.get(cardToAddToAdapter)!!)
             cardToAddToAdapter += 1
         }
         Datastore.setPlayerHandToViewList()
@@ -154,18 +144,18 @@ class Game : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setTextView() {
-        if (Datastore.playerNumber == playerTurn){
+        if (playerNumber == playerTurn){
             playerTurnView.text = "It's your Turn"
         }else{
 
             playerTurnView.text = "It's Player ${playerTurn}s Turn"
         }
-        playerNumberView.text = "Your Player ${Datastore.playerNumber}"
+        playerNumberView.text = "Your Player $playerNumber"
 
     }
 
     private fun changeShownText() {
-        when(Datastore.playerNumber){
+        when(playerNumber){
             1 ->{
                 when (Datastore.playerCount){
                     2 -> {
@@ -384,11 +374,8 @@ class Game : AppCompatActivity() {
     }
 
     private fun getLinkForCardHolder(){
-        println("wtf22 ${Datastore.cardHolder}")
         Datastore.listOfCardsToGiveLink = Datastore.cardHolder
         Datastore.setPlayerHandToViewList()
-        println("wtf3 ${Datastore.cardList}")
-        println("wtf2 ${Datastore.cardList[Datastore.cardHolder.size -1]}")
         cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size -1].link)
     }
 
@@ -532,7 +519,6 @@ class Game : AppCompatActivity() {
                 val playerHand6FromDB = snapshot.get("playerHand6") as? String ?: ""
                 val string6List = listOf(playerHand6FromDB)
                 if (playerHand6FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand6FromDB")
                     Datastore.playerHand6 = string6List.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -547,7 +533,6 @@ class Game : AppCompatActivity() {
                 val playerHand7FromDB = snapshot.get("playerHand7") as? String ?: ""
                 val stringList7 = listOf(playerHand7FromDB)
                 if (playerHand7FromDB.isNotBlank()) {
-                    println("List ahahahahahahahah $playerHand7FromDB")
                     Datastore.playerHand7 = stringList7.flatMap { input ->
                         "\\bUnoCard\\(number=([^,]+),\\s+color=([^\\)]+)\\)".toRegex()
                             .findAll(input)
@@ -561,10 +546,20 @@ class Game : AppCompatActivity() {
                 }
 
                 changeDisplayedItems()
-                if (playerTurn == Datastore.playerNumber){
+
+                var result = 0
+                var playerToCheck = 1
+                for (index in ( 1 until Datastore.playerHands.size)){
+                    if (Datastore.playerHands[playerToCheck]?.size != 0) {
+                        result += 1
+                    }
+
+                    playerToCheck += 1
+                }
+                if (playerTurn == playerNumber){
                     Datastore.checkIfPlayerCanCounterCardDraw()
                 }
-                if(Datastore.playerHands[playerNumber]?.size == 0){
+                if(Datastore.playerHands[playerNumber]?.size == 0 || result == 1){
                     val intent = Intent(this, Winner::class.java)
                     startActivity(intent)
                 }

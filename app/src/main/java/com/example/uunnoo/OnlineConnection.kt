@@ -75,8 +75,6 @@ class OnlineConnection : AppCompatActivity() {
                                     buttonnJoin.text = "Join Game"
                                 }else if (playersconnected  == Datastore.playerCount){
                                     //Meldung Voll
-                                    println("hhhhahaah voll")
-                                    println("hhhhahaah ${Datastore.playerCount}  $playersconnected")
                                     buttonnJoin.text = "Check Again"
                                 }
                             }
@@ -84,15 +82,11 @@ class OnlineConnection : AppCompatActivity() {
                             wrongIdInput()
                         }
                     }
-                    .addOnCanceledListener {
-                        println("WTF")
-                    }
 
             }else{
                 wrongIdInput()
             }
         }else if (buttonJoinClicked == 2 && buttonCreateClicked == 0){
-            println("Ich wurde ausgeführt")
             val intent = Intent(this, Game::class.java)
             startActivity(intent)
             val playersConnectedToDB = hashMapOf(
@@ -110,8 +104,6 @@ class OnlineConnection : AppCompatActivity() {
     }
 
     private fun wrongIdInput() {
-        println("input ${Datastore.gameIdInDB}")
-        println("input $playersconnected")
     }
 
     private fun createGame(){

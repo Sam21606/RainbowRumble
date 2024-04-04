@@ -6,12 +6,10 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 
 lateinit var playerCount: TextView
 lateinit var seekBarPlayerCount: SeekBar
-lateinit var onOfflinechanger: ToggleButton
 lateinit var startGame: Button
 
 
@@ -25,14 +23,10 @@ class GameSettings : AppCompatActivity() {
     fun init(){
         playerCount = findViewById(R.id.playerCount)
         seekBarPlayerCount = findViewById(R.id.seekBarPlayerCount)
-        onOfflinechanger = findViewById(R.id.onOfflinechanger)
         startGame = findViewById(R.id.startGame)
 
         startGame.setOnClickListener{
             startGame()
-        }
-        onOfflinechanger.setOnClickListener {
-            setOnOfflineStatus()
         }
         seekBarPlayerCount.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -40,11 +34,9 @@ class GameSettings : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-                //playercountChanger()
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                //playercountChanger()
             }
         })
 
@@ -63,13 +55,6 @@ class GameSettings : AppCompatActivity() {
 
     }
 
-    fun setOnOfflineStatus(){
-        if (onOfflinechanger.text.toString() == "Offline"){
-            Datastore.onOffline = false
-        }else if (onOfflinechanger.text.toString() == "Online"){
-            Datastore.onOffline = true
-        }
-    }
 
     fun playercountChanger(){
         when (seekBarPlayerCount.progress) {

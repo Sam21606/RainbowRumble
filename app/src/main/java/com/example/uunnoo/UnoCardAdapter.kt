@@ -32,16 +32,11 @@ class UnoCardAdapter(private val cardList: MutableList<UnoCardLink>) :
         holder.cardId.setImageResource(cards.link)
         holder.playCardButton.setOnClickListener{
             if (Datastore.playerTurn == Datastore.playerNumber){
-                println("Hello ich stimme")
                 Datastore.playedCardPositionInPlayerHand = cards.positionInPlayerHand
                 Datastore.playedCard.clear()
                 Datastore.playedCard.add(Datastore.playerHands[Datastore.playerNumber]!![cards.positionInPlayerHand])
                 Datastore.checkIfCardCanBePlayed()
-            }else{
-                println("Hello ich stimme nicht")
-                println("Hello ich stimme nicht2 ${Datastore.playerTurn} ${Datastore.playerNumber}")
             }
-            println("Hello")
         }
     }
 
