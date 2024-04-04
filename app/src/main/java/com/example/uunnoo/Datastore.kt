@@ -32,7 +32,8 @@ object Datastore {
     var listOfCardsToGiveLink: MutableList<UnoCard> = mutableListOf()
     var playedCardPositionInPlayerHand = 0
     var anyCardCanBePlayed = false
-    var rotationDirection = true
+    var rotationDirection = false
+    // var rotationDirection = true
     var listOfPlayersPlaing: MutableList<Int> = mutableListOf()
     var playerTurnListPosition = 0
     var choosenColor = ""
@@ -117,7 +118,8 @@ object Datastore {
             "playerHand6" to "${playerHands[6]}",
             "playerHand7" to "${playerHands[7]}",
             "cardsToDraw" to cardsToDraw,
-            "choosenColor" to choosenColor
+            "choosenColor" to choosenColor,
+            "rotationDirection" to rotationDirection
         )
 
         db.collection("Games").document(gameIdInDB)
@@ -530,7 +532,7 @@ object Datastore {
             println("Ich wurde ausgeführt $anyCardCanBePlayed")
         } else if (cardHolder[cardHolder.size - 1].color == "Black") {//check if last Card was special Card
             if (choosenColor == playedCard[0].color || playedCard[0].color == "Black") {
-                playCard()// weil es möglich ist auch eine Black card zu legen
+                playCard()
             }
         } else {
             if (playedCard[0].color == "Black") {// check if color matches
@@ -557,6 +559,7 @@ object Datastore {
             }
             if (!anyCardCanBePlayed){
                 drawCards()
+                nextTurn()
                 addToDB()
                 println("es wurde gezogen werden ")
             }
@@ -592,6 +595,7 @@ object Datastore {
         }
         playerHands[playerNumber]?.add(unoCardList[0])
         unoCardList.removeAt(0)
+        println("hallo1 $playerNumber")
     }
 
     private fun playCard() {
@@ -635,6 +639,7 @@ object Datastore {
             }
             playerToCheck += 1
         }
+        println("Hallo $rotationDirection")
         println("Hallo $listOfPlayersPlaing")
         println("Hallo $playerTurnListPosition")
 
@@ -650,9 +655,9 @@ object Datastore {
                     println("Hallo2")
                 }
             } else {
-                if (playerTurnListPosition > 1) {
+                if (playerTurnListPosition > 0) {
                     playerTurnListPosition -= 1
-                } else if (playerTurnListPosition == 1){
+                } else if (playerTurnListPosition == 0){
                     playerTurnListPosition = listOfPlayersPlaing.size -1
                 }
 

@@ -1,5 +1,7 @@
 package com.example.uunnoo
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uunnoo.Datastore.UnoCard
+import com.example.uunnoo.Datastore.playerNumber
+import com.example.uunnoo.Datastore.playerTurn
 
 
 private lateinit var ziehen: Button
@@ -28,6 +32,8 @@ private lateinit var buttonGreen : Button
 private lateinit var buttonPink : Button
 private lateinit var buttonYellow : Button
 lateinit var colorChoosingContainer : ConstraintLayout
+lateinit var playerTurnView: TextView
+lateinit var playerNumberView: TextView
 
 
 private var unoList : MutableList<UnoCard> = mutableListOf()
@@ -57,6 +63,8 @@ class Game : AppCompatActivity() {
         buttonGreen = findViewById(R.id.buttonGreen)
         buttonPink = findViewById(R.id.buttonPink)
         buttonYellow = findViewById(R.id.buttonYellow)
+        playerTurnView = findViewById(R.id.playerTurnView)
+        playerNumberView = findViewById(R.id.playerNumberView)
 
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -64,11 +72,10 @@ class Game : AppCompatActivity() {
         changeDisplayedItems()
 
         ziehen.setOnClickListener {
-            println("Halloo ${Datastore.playerNumber} ${Datastore.playerTurn}")
-            if(Datastore.playerNumber == Datastore.playerTurn){
+            println("Halloo ${Datastore.playerNumber} $playerTurn")
+            if(Datastore.playerNumber == playerTurn){
                 Datastore.nextTurn()
                 drawCard()
-                //changeDisplayedItems()
             }
         }
 
@@ -90,21 +97,25 @@ class Game : AppCompatActivity() {
         buttonYellow.setOnClickListener{
             Datastore.choosenColor = "Yellow"
             colorChoosingContainer.visibility = View.GONE
+            Datastore.addToDB()
         }
 
         buttonBlue.setOnClickListener{
             Datastore.choosenColor = "Blue"
             colorChoosingContainer.visibility = View.GONE
+            Datastore.addToDB()
         }
 
         buttonPink.setOnClickListener{
             Datastore.choosenColor = "Pink"
             colorChoosingContainer.visibility = View.GONE
+            Datastore.addToDB()
         }
 
         buttonGreen.setOnClickListener{
             Datastore.choosenColor = "Green"
             colorChoosingContainer.visibility = View.GONE
+            Datastore.addToDB()
         }
     }
 
@@ -128,8 +139,7 @@ class Game : AppCompatActivity() {
     }
 
     private fun drawCard() {
-        Datastore.playerHands[Datastore.playerTurn]?.add(Datastore.unoCardList[0])
-        Datastore.unoCardList.removeAt(0)
+        Datastore.drawCard()
         changeDisplayedItems()
         Datastore.addToDB()
     }
@@ -139,6 +149,19 @@ class Game : AppCompatActivity() {
         getLinkForCardHolder()
         getUnoCardDataForAdapter()
         changeShownText()
+        setTextView()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setTextView() {
+        if (Datastore.playerNumber == playerTurn){
+            playerTurnView.text = "It's your Turn"
+        }else{
+
+            playerTurnView.text = "It's Player ${playerTurn}s Turn"
+        }
+        playerNumberView.text = "Your Player ${Datastore.playerNumber}"
+
     }
 
     private fun changeShownText() {
@@ -369,10 +392,6 @@ class Game : AppCompatActivity() {
         cardHolder.setImageResource(Datastore.cardList[Datastore.cardHolder.size -1].link)
     }
 
-    fun allowGameTurn() {
-        ziehen.visibility == View.VISIBLE
-    }
-
     fun getDBandDBChanges() {
 
         Datastore.db.collection("Games").document(Datastore.gameIdInDB)
@@ -435,8 +454,9 @@ class Game : AppCompatActivity() {
                 }
 
                 Datastore.cardsToDraw = snapshot?.getLong("cardsToDraw")?.toInt()!!
-                Datastore.playerTurn = snapshot.getLong("playerTurn")?.toInt()!!
+                playerTurn = snapshot.getLong("playerTurn")?.toInt()!!
                 Datastore.choosenColor = snapshot.get("choosenColor")?.toString()!!
+                Datastore.rotationDirection = snapshot.get("rotationDirection") as Boolean
 
                 val playerHand1FromDB = snapshot.get("playerHand1") as? String ?: ""
                 val string1List = listOf(playerHand1FromDB)
@@ -541,8 +561,12 @@ class Game : AppCompatActivity() {
                 }
 
                 changeDisplayedItems()
-                if (Datastore.playerTurn == Datastore.playerNumber){
+                if (playerTurn == Datastore.playerNumber){
                     Datastore.checkIfPlayerCanCounterCardDraw()
+                }
+                if(Datastore.playerHands[playerNumber]?.size == 0){
+                    val intent = Intent(this, Winner::class.java)
+                    startActivity(intent)
                 }
             }
 
