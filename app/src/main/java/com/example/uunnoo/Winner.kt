@@ -17,9 +17,9 @@ class Winner : AppCompatActivity(){
         imageView = findViewById(R.id.imageView)
         var list : MutableList<UnoCardLink> = mutableListOf()
         if (Datastore.playerHands[Datastore.playerNumber]?.size  == 0){
-            list.add(UnoCardLink(R.drawable.youlose, 0))
-        }else{
             list.add(UnoCardLink(R.drawable.youwin, 0))
+        }else{
+            list.add(UnoCardLink(R.drawable.youlose, 0))
         }
         imageView.setImageResource(list[0].link)
     }
