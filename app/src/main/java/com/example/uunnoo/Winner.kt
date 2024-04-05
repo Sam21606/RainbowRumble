@@ -16,16 +16,7 @@ class Winner : AppCompatActivity(){
     fun init(){
         imageView = findViewById(R.id.imageView)
         var list : MutableList<UnoCardLink> = mutableListOf()
-        var result = Datastore.playerCount
-        var playerToCheck = 1
-        for (index in ( 1 until Datastore.playerHands.size)){
-            if (Datastore.playerHands[playerToCheck]?.size != 0) {
-                result -= 1
-            }
-
-            playerToCheck += 1
-        }
-        if (result +1 == Datastore.playerCount){
+        if (Datastore.playerHands[Datastore.playerNumber]?.size  == 0){
             list.add(UnoCardLink(R.drawable.youlose, 0))
         }else{
             list.add(UnoCardLink(R.drawable.youwin, 0))
